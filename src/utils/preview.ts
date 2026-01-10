@@ -6,14 +6,20 @@ const cleanUp = (content: string) => content
     .replace(/^(#\s+.+\n+)(!\[.+]\(.*\)\n?){1,2}\n?/, '$1\n')
     .replace(/^(#\s+.+\n+)(<img\s.*\/>\n?){1,2}\n?/, '$1\n')
 
-export const setPreview = (content: string, image: Image) => {
-    if (! hasHeader(content)) {
-        content = `# Hello World!\n\n${ content }`
-    }
+const titleCase = (title: string) => title
+    .replace(/[A-Z]/g, ' $1')
+    .toLowerCase()
+    .replace(/(^|\s|-|_)\S/g, (match: string) => match.toUpperCase())
+    .replace(/[-_]/g, ' ')
 
-    content = cleanUp(content)
+export const setPreview = (content: string, repo: Repository, image: Image) => {
+    if (! hasHeader(content)) {
+        const title = titleCase(repo.name)
+
+        content = `# ${ title }\n\n${ content }`
+    }
 
     const images = getImages(image)
 
-    return content.replace(/^(#\s+.+\n\n)/, `$1${ images }\n\n`)
+    return cleanUp(content).replace(/^(#\s+.+\n\n)/, `$1${ images }\n\n`)
 }
