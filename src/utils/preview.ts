@@ -1,5 +1,4 @@
 import { Image } from '../types/image'
-import { Repository } from '../types/repository'
 import { getImages } from './image'
 
 const hasHeader = (content: string) => content.match(/^#\s+/)
@@ -14,9 +13,9 @@ const titleCase = (title: string) => title
     .replace(/(^|\s|-|_)\S/g, (match: string) => match.toUpperCase())
     .replace(/[-_]/g, ' ')
 
-export const setPreview = (content: string, repo: Repository, image: Image) => {
+export const setPreview = (content: string, repositoryName: string, image: Image) => {
     if (! hasHeader(content)) {
-        const title = titleCase(repo.name)
+        const title = titleCase(repositoryName)
 
         content = `# ${ title }\n\n${ content }`
     }
