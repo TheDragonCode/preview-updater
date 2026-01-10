@@ -1,7 +1,7 @@
 interface Image
 {
     canDark: boolean
-    template: string
+    host: string
 
     theme: string
     pattern: string
@@ -9,8 +9,9 @@ interface Image
     fontSize: string
     icon: string
 
-    packageManager: string
+    packageManager: 'composer' | 'npm' | 'yarn' | 'pip' | 'none'
     packageName: string
+    packageGlobal: boolean
 
     title: string
     description: string
@@ -19,7 +20,7 @@ interface Image
 interface BeyondImage extends Image
 {
     canDark: true
-    template: 'https://banners.beyondco.de/{title}.png?theme={theme}&packageManager={packageManager}&packageName={packageName}&pattern={pattern}&style={style}&description={description}&md=1&showWatermark=1&fontSize={fontSize}&images={icon}'
+    host: 'https://banners.beyondco.de'
 
     theme: 'light'
     pattern: 'topography'
@@ -27,4 +28,5 @@ interface BeyondImage extends Image
     fontSize: '100px'
     icon: 'https://laravel.com/img/logomark.min.svg'
 
+    packageGlobal: false
 }
