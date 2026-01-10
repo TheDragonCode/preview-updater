@@ -1,0 +1,14 @@
+/* Visit https://aka.ms/tsconfig.json to read more about this file */
+{
+    "compilerOptions": {
+        "strict": true,
+        "module": "commonjs",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": ["ES2021"],
+        "target": "ES2021",
+        "skipLibCheck": true
+    },
+    "exclude": ["./coverage/*", "./dist/*"]
+}
