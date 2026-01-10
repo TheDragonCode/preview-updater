@@ -1,6 +1,5 @@
 export interface Image
 {
-    canDark: boolean
     host: string
 
     theme: string
@@ -17,22 +16,7 @@ export interface Image
     description: string
 }
 
-export interface BeyondImage extends Image
-{
-    canDark: true
-    host: 'https://banners.beyondco.de'
-
-    theme: 'light'
-    pattern: 'topography'
-    style: 'style_2'
-    fontSize: '100px'
-    icon: 'https://laravel.com/img/logomark.min.svg'
-
-    packageGlobal: false
-}
-
-export const defaultImage: BeyondImage = {
-    canDark: true,
+export const defaultImage: Image = {
     host: 'https://banners.beyondco.de',
 
     theme: 'light',
