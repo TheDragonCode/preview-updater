@@ -36,7 +36,7 @@ const previewUpdater = async () => {
     const branchExists = await repo.branchExists(branchName)
     info(`Checkout ${ branchExists ? 'existing' : 'new' } branch named "${ branchName }"`)
     await repo.checkoutBranch(branchName, ! branchExists)
-    
+
     // TODO: Stop at https://github.com/FantasticFiasco/action-update-license-year/blob/main/src/main.js#L76
 }
 
