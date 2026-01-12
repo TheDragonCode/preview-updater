@@ -1,8 +1,35 @@
-import { Image } from '../types/config'
+import { Image, ImageParameters } from '../types/config'
+import { hasComposer, hasNpm, hasYarn } from './packageManagers'
 
-const encodeUri = (value: string) => encodeURIComponent(value)
+const encodeUri = (value: string): string => {
+    if (value === '') {
+        return ''
+    }
 
-const packageManager = (image: Image): string => {
+    return encodeURIComponent(value)
+}
+
+const detectPackageManager = (visibility: string): string => {
+    if (hasComposer()) {
+        return `composer${ visibility } require`
+    }
+
+    if (hasNpm()) {
+        return `npm${ visibility } install`
+    }
+
+    if (hasYarn()) {
+        return `yarn${ visibility } add`
+    }
+
+    return ''
+}
+
+const packageManager = (image: ImageParameters): string => {
+    if (image.packageManager === 'none') {
+        return ''
+    }
+
     const visibility = image.packageGlobal ? ' global' : ''
 
     switch (image.packageManager) {
@@ -12,37 +39,33 @@ const packageManager = (image: Image): string => {
             return `npm${ visibility } install`
         case 'yarn':
             return `yarn${ visibility } add`
-        case 'pip':
-            return `pip${ visibility } install`
-        default:
-            return ''
+        case 'auto':
+            return detectPackageManager(visibility)
     }
 }
 
-const packageName = (image: Image) => image.packageManager !== 'none' ? image.packageName : ''
+const packageName = (image: ImageParameters): string => image.packageManager !== 'none' ? image.packageName : ''
 
-const render = (image: Image, theme: string = '', suffix: string = ''): string => {
+const render = (image: Image, theme: 'light' | 'dark', suffix: string = ''): string => {
     const params = new URLSearchParams({
-        theme: theme || image.theme,
-        pattern: image.pattern,
-        style: image.style,
-        fontSize: image.fontSize,
-        images: image.icon,
-        packageManager: encodeUri(packageManager(image)),
-        packageName: encodeUri(packageName(image)),
-        description: encodeUri(image.description)
+        theme: theme,
+        pattern: image.parameters.pattern,
+        style: image.parameters.style,
+        fontSize: image.parameters.fontSize,
+        images: image.parameters.icon,
+        packageManager: encodeUri(packageManager(image.parameters)),
+        packageName: encodeUri(packageName(image.parameters)),
+        description: encodeUri(image.parameters.description)
     })
 
-    return image.url + '/' + encodeUri(image.title) + '.png?' + params.toString() + suffix
+    return image.url + '/' + encodeUri(image.parameters.title) + '.png?' + params.toString() + suffix
 }
 
-const format = (title: string, url: string) => `![${ title }](${ url })`
+const format = (title: string, url: string): string => `![${ title }](${ url })`
 
 export const getImages = (image: Image): string[] => {
-    const title = `${ image.title } banner`
-
-    const light = format(title, render(image, 'light', '#gh-light-mode-only'))
-    const dark = format(title, render(image, 'dark', '#gh-dark-mode-only'))
+    const light = format(image.parameters.title, render(image, 'light', '#gh-light-mode-only'))
+    const dark = format(image.parameters.title, render(image, 'dark', '#gh-dark-mode-only'))
 
     return [light, dark]
 }
