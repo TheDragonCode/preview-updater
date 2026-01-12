@@ -1,6 +1,11 @@
 import { setPreview } from '../../src/utils/preview'
 import { readFile } from '../../src/utils/filesystem'
-import { defaultConfig } from '../../src/types/config'
+import { Config, defaultConfig } from '../../src/types/config'
+
+const testConfig: Config = {
+    directory: process.cwd(),
+    image: { url: '' }
+}
 
 const getReadme = (filename: string): string => {
     const content = readFile(defaultConfig, 'tests/fixtures/readme/' + filename)

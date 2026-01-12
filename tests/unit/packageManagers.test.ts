@@ -1,10 +1,5 @@
 import { hasComposer, hasNpm, hasYarn } from '../../src/utils/packageManagers'
-import { Config, defaultConfig } from '../../src/types/config'
-
-const testConfig: Config = {
-    directory: process.cwd(),
-    image: { url: '' }
-}
+import { testConfig } from '../mocks/config'
 
 test('composer', () => {
     expect(hasComposer(testConfig)).toBe(false)
