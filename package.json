@@ -5,7 +5,7 @@
     "main": "./dist/index.js",
     "scripts": {
         "type-check": "tsc --noEmit",
-        "test": "tsc --outDir build && jest",
+        "test": "jest",
         "dev": "npm run build && node dist/index.js",
         "build": "ncc build ./src/index.ts",
         "release": "npm run build"
