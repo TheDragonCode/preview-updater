@@ -8,9 +8,6 @@ import { setPreview } from './utils/preview'
 import { setOutputs } from './utils/outputs'
 
 const previewUpdater = async () => {
-    // Welcome
-    info(`Working directory: ${ cwd }`)
-
     // Inputs
     const {
         token,
@@ -19,12 +16,17 @@ const previewUpdater = async () => {
 
     // Load Config
     const config: Config = readConfig(<Config>{
+        directory: cwd(),
+
         repository: {
             owner: context.repo.owner,
             repo: context.repo.repo,
             octokit: getOctokit(token)
         }
     }, configPath)
+
+    // Show working directory
+    info(`Working directory: ${ config.directory }`)
 
     // Authenticate
     const repo = new Repository(config)
