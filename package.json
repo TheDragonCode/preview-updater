@@ -4,11 +4,12 @@
     "author": "Andrey Helldar <helldar@dragon-code.pro>",
     "main": "./dist/index.js",
     "scripts": {
-        "type-check": "tsc --noEmit",
-        "test": "jest",
-        "dev": "npm run build && node dist/index.js",
         "build": "ncc build ./src/index.ts",
-        "release": "npm run build"
+        "release": "npm run build",
+        "dev": "npm run build && node dist/index.js",
+        "coverage": "jest --coverage",
+        "test": "jest",
+        "type-check": "tsc --noEmit"
     },
     "keywords": [
         "preview",
