@@ -94,7 +94,7 @@ export const defaultConfig: Config = {
         repo: '',
 
         commit: {
-            branch: 'preview/update-{timestamp}',
+            branch: 'preview/update-{random}',
             title: 'docs(preview): Update preview',
             body: '',
 

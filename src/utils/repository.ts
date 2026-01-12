@@ -1,10 +1,10 @@
 import { Config } from '../types/config'
 import { exec } from './filesystem'
+import { randomizer } from './randomizer'
 
 export class Repository
 {
     private _config: Config
-    private _timestamp: string = Date.now().toString()
     private _currentBranch: string = ''
     private _newBranch: boolean = false
 
@@ -41,7 +41,7 @@ export class Repository
     {
         try {
             this._newBranch = isNew
-            
+
             console.log('bbb', isNew)
 
             await exec(`git switch ${ isNew ? '-c' : '' } "${ this.branchName() }"`)
@@ -158,7 +158,7 @@ export class Repository
     {
         if (this._currentBranch === '') {
             this._currentBranch = this._config.repository.commit.branch
-                .replace('{timestamp}', this._timestamp)
+                .replace('{random}', randomizer())
         }
 
         return this._currentBranch

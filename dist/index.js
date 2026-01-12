@@ -34380,7 +34380,6 @@ const inputs_1 = __nccwpck_require__(9612);
 const core_1 = __nccwpck_require__(7484);
 const repository_1 = __nccwpck_require__(6629);
 const preview_1 = __nccwpck_require__(1365);
-const outputs_1 = __nccwpck_require__(8595);
 const previewUpdater = async () => {
     // Welcome
     (0, core_1.info)(`Working directory: ${filesystem_1.cwd}`);
@@ -34415,20 +34414,26 @@ const previewUpdater = async () => {
     // Stage and commit changes
     await repo.stage();
     await repo.commit();
-    await repo.push();
-    // Create a Pull Request
-    const pullRequest = await repo.createPullRequest();
-    // Variables
-    const pullRequestNumber = pullRequest.data.number;
-    const pullRequestUrl = pullRequest.data.html_url;
-    if (config.repository.pullRequest.assignees.length > 0) {
-        await repo.assignee(pullRequestNumber, config.repository.pullRequest.assignees);
-    }
-    if (config.repository.pullRequest.labels.length > 0) {
-        await repo.addLabels(pullRequestNumber, config.repository.pullRequest.labels);
-    }
-    (0, core_1.info)(`Preview created in pull request #${pullRequestNumber}: ${pullRequestUrl}`);
-    (0, outputs_1.setOutputs)(repo.branchName(), pullRequestNumber, pullRequestUrl);
+    // await repo.push()
+    //
+    // // Create a Pull Request
+    // const pullRequest = await repo.createPullRequest()
+    //
+    // // Variables
+    // const pullRequestNumber: number = pullRequest.data.number
+    // const pullRequestUrl: string = pullRequest.data.html_url
+    //
+    // if (config.repository.pullRequest.assignees.length > 0) {
+    //     await repo.assignee(pullRequestNumber, config.repository.pullRequest.assignees)
+    // }
+    //
+    // if (config.repository.pullRequest.labels.length > 0) {
+    //     await repo.addLabels(pullRequestNumber, config.repository.pullRequest.labels)
+    // }
+    //
+    // info(`Preview created in pull request #${ pullRequestNumber }: ${ pullRequestUrl }`)
+    //
+    // setOutputs(repo.branchName(), pullRequestNumber, pullRequestUrl)
 };
 exports["default"] = previewUpdater;
 
@@ -34465,7 +34470,7 @@ exports.defaultConfig = {
         owner: '',
         repo: '',
         commit: {
-            branch: 'preview/update-{timestamp}',
+            branch: 'preview/update-{random}',
             title: 'docs(preview): Update preview',
             body: '',
             author: {
@@ -34673,24 +34678,6 @@ exports.parse = parse;
 
 /***/ }),
 
-/***/ 8595:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.setOutputs = void 0;
-const core_1 = __nccwpck_require__(7484);
-const setOutputs = (branchName, pullRequestNumber, pullRequestUrl) => {
-    (0, core_1.setOutput)('branchName', branchName);
-    (0, core_1.setOutput)('pullRequestNumber', pullRequestNumber);
-    (0, core_1.setOutput)('pullRequestUrl', pullRequestUrl);
-};
-exports.setOutputs = setOutputs;
-
-
-/***/ }),
-
 /***/ 2453:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -34739,6 +34726,26 @@ exports.setPreview = setPreview;
 
 /***/ }),
 
+/***/ 3678:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.randomizer = void 0;
+const randomizer = (length = 8) => {
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+};
+exports.randomizer = randomizer;
+
+
+/***/ }),
+
 /***/ 6629:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -34747,9 +34754,9 @@ exports.setPreview = setPreview;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Repository = void 0;
 const filesystem_1 = __nccwpck_require__(9742);
+const randomizer_1 = __nccwpck_require__(3678);
 class Repository {
     constructor(config) {
-        this._timestamp = Date.now().toString();
         this._currentBranch = '';
         this._newBranch = false;
         this._config = config;
@@ -34872,7 +34879,7 @@ class Repository {
     branchName() {
         if (this._currentBranch === '') {
             this._currentBranch = this._config.repository.commit.branch
-                .replace('{timestamp}', this._timestamp);
+                .replace('{random}', (0, randomizer_1.randomizer)());
         }
         return this._currentBranch;
     }
