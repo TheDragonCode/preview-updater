@@ -3,6 +3,8 @@ import { Config, defaultConfig } from '../types/config'
 import * as yaml from 'js-yaml'
 import { deepmerge } from 'deepmerge-ts'
 
+export const fileExists = (path: string): boolean => fs.existsSync(path)
+
 export const readFile = (path: string): string => {
     if (! fs.existsSync(path)) {
         return ''
