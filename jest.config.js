@@ -1,4 +1,4 @@
 module.exports = {
     testEnvironment: 'node',
-    collectCoverageFrom: ['./build/**/*.js']
+    collectCoverageFrom: ['./src/**/*.ts']
 }
