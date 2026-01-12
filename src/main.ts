@@ -1,28 +1,27 @@
-import { cwd } from './utils/filesystem'
+import { cwd, readConfig } from './utils/filesystem'
 import { context } from '@actions/github'
 import { parse } from './utils/inputs'
 import { info } from '@actions/core'
+import { Config } from './types/config'
 
 const previewUpdater = async () => {
-    // Inputs
-
+    // Welcome
     info(`Working directory: ${ cwd }`)
 
-    const { owner, repo: repoName } = context.repo
-
+    // Inputs
     const {
         token,
-        path,
-        branchName,
-        commitTitle,
-        commitBody,
-        commitAuthorName,
-        commitAuthorEmail,
-        pullRequestTitle,
-        pullRequestBody,
-        assignees,
-        labels
+        configPath
     } = parse()
+
+    // Load Config
+    const config = readConfig(<Config>{
+        repository: {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            token: token
+        }
+    }, configPath)
 
     // Authenticate
     const repo = new Repository(owner, repoName, token)

@@ -19,14 +19,57 @@ export interface Image
     parameters: ImageParameters;
 }
 
+export interface Author
+{
+    name: string;
+    email: string;
+}
+
+export interface Commit
+{
+    branch: string;
+    title: string;
+    body: string;
+    author: Author
+}
+
+export interface PullRequest
+{
+    title: string;
+    body: string;
+    assignees: string[];
+    labels: string[];
+}
+
+export interface Repository
+{
+    owner: string;
+    repo: string;
+    token: string;
+
+    commit: Commit;
+    pullRequest: PullRequest;
+}
+
+export interface Path
+{
+    readme: string;
+}
+
 export interface Config
 {
     directory: string;
+    path: Path;
+
     image: Image;
+    repository: Repository;
 }
 
 export const defaultConfig: Config = {
     directory: '',
+    path: {
+        readme: 'README.md'
+    },
 
     image: {
         url: 'https://banners.beyondco.de/{title}.png',
@@ -43,6 +86,30 @@ export const defaultConfig: Config = {
 
             title: '',
             description: ''
+        }
+    },
+
+    repository: {
+        owner: '',
+        repo: '',
+        token: '',
+
+        commit: {
+            branch: 'preview/update-{timestamp}',
+            title: 'docs(preview): Update preview',
+            body: '',
+
+            author: {
+                name: 'github-actions',
+                email: 'github-actions@github.com'
+            }
+        },
+
+        pullRequest: {
+            title: 'Update preview',
+            body: '',
+            assignees: [],
+            labels: []
         }
     }
 }

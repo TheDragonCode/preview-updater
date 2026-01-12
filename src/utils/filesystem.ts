@@ -29,14 +29,14 @@ export const writeFile = (config: Config, filename: string, content: string): vo
     fs.writeFileSync(filePath(config, filename), content)
 }
 
-export const readConfig = (config: Config, path: string = ''): Config => {
-    const content = readFile(config, path || '.github/preview-updater.yml')
+export const readConfig = (config: Config, userConfigPath: string): Config => {
+    const content = readFile(defaultConfig, userConfigPath)
 
     if (content === '') {
-        return defaultConfig
+        return <Config>deepmerge(defaultConfig, config)
     }
 
     const userConfig = <Config>yaml.load(content)
 
-    return <Config>deepmerge(defaultConfig, userConfig)
+    return <Config>deepmerge(defaultConfig, userConfig, config)
 }
