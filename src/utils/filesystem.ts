@@ -46,11 +46,7 @@ export const readConfig = (config: Config, userConfigPath: string): Config => {
 export const exec = async (command: string): Promise<string> => {
     const execAsync = promisify(nodeExec)
 
-    const { stdout, stderr } = await execAsync(command)
-
-    if (stderr !== '') {
-        throw new Error(stderr)
-    }
+    const { stdout } = await execAsync(command)
 
     return stdout.toString().trim()
 }
