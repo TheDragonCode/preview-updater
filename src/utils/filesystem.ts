@@ -1,6 +1,7 @@
 import * as fs from 'node:fs'
 import { Config, defaultConfig } from '../types/config'
 import * as yaml from 'js-yaml'
+import { deepmerge } from 'deepmerge-ts'
 
 export const readFile = (path: string): string => {
     if (! fs.existsSync(path)) {
@@ -31,5 +32,7 @@ export const readConfig = (path: string = ''): Config => {
         return defaultConfig
     }
 
-    return <Config>yaml.load(content)
+    const userConfig = <Config>yaml.load(content)
+
+    return <Config>deepmerge(defaultConfig, userConfig)
 }

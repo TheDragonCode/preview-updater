@@ -1,5 +1,5 @@
-import { Image } from '../types/image'
 import { getImages } from './image'
+import { Image } from '../types/config'
 
 const hasHeader = (content: string) => content.match(/^#\s+/)
 

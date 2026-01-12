@@ -1,4 +1,4 @@
-import { Image } from '../types/image'
+import { Image } from '../types/config'
 
 const encodeUri = (value: string) => encodeURIComponent(value)
 
@@ -33,7 +33,7 @@ const render = (image: Image, theme: string = '', suffix: string = ''): string =
         description: encodeUri(image.description)
     })
 
-    return image.host + '/' + encodeUri(image.title) + '.png?' + params.toString() + suffix
+    return image.url + '/' + encodeUri(image.title) + '.png?' + params.toString() + suffix
 }
 
 const format = (title: string, url: string) => `![${ title }](${ url })`
