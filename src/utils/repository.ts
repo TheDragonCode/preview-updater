@@ -30,11 +30,26 @@ export class Repository
 
     async branchExists()
     {
-        return await exec(`git branch --list "${ this.branchName() }"`)
-            .then(() => true)
-            .catch(error => {
-                throw new Error(error.message)
-            })
+        try {
+            const hasLocalBranch = async () => {
+                const result = await exec(`git branch --list "${ this.branchName() }"`)
+
+                return result.includes(this.branchName())
+            }
+
+            const hasRemoteBranch = async () => {
+                const result = await exec(`git ls-remote --heads origin "${ this.branchName() }"`)
+
+                return result.includes(this.branchName())
+            }
+
+            return (await hasLocalBranch()) || (await hasRemoteBranch())
+        } catch (error) {
+            // @ts-ignore
+            error.message = `Error searching for branch "${ this.branchName() }": ${ error.message }`
+
+            throw error
+        }
     }
 
     async checkoutBranch(isNew: boolean)
