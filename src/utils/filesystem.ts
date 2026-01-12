@@ -2,6 +2,7 @@ import * as fs from 'node:fs'
 import { Config, defaultConfig } from '../types/config'
 import * as yaml from 'js-yaml'
 import { deepmerge } from 'deepmerge-ts'
+import { exec as nodeExec, ExecException } from 'node:child_process'
 
 export const cwd = (): string => {
     const path = process.env.GITHUB_WORKSPACE
@@ -39,4 +40,16 @@ export const readConfig = (config: Config, userConfigPath: string): Config => {
     const userConfig = <Config>yaml.load(content)
 
     return <Config>deepmerge(defaultConfig, userConfig, config)
+}
+
+export const exec = (command: string): Promise<any> => {
+    return new Promise((resolve, reject): void => {
+        nodeExec(command, (error: ExecException | null, stdout: string, stderr: string): void => {
+            if (error || stderr) {
+                reject(error || stderr)
+            }
+
+            resolve(stdout)
+        })
+    })
 }

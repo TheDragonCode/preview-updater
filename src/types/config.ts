@@ -45,7 +45,7 @@ export interface Repository
 {
     owner: string;
     repo: string;
-    token: string;
+    octokit?: any;
 
     commit: Commit;
     pullRequest: PullRequest;
@@ -92,7 +92,6 @@ export const defaultConfig: Config = {
     repository: {
         owner: '',
         repo: '',
-        token: '',
 
         commit: {
             branch: 'preview/update-{timestamp}',
