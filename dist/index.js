@@ -34382,6 +34382,7 @@ const repository_1 = __nccwpck_require__(6629);
 const preview_1 = __nccwpck_require__(1365);
 const outputs_1 = __nccwpck_require__(8595);
 const packageManagers_1 = __nccwpck_require__(2453);
+const strings_1 = __nccwpck_require__(3063);
 const previewUpdater = async () => {
     // Inputs
     const { token, configPath } = (0, inputs_1.parse)();
@@ -34397,7 +34398,7 @@ const previewUpdater = async () => {
     // Read names
     const packageManager = (0, packageManagers_1.getPackageManager)(config);
     config.image.parameters.packageName = packageManager.name;
-    config.image.parameters.title = config.repository.repo;
+    config.image.parameters.title = (0, strings_1.titleCase)(config.repository.repo);
     config.image.parameters.description = packageManager.description || config.repository.owner;
     // Show working directory
     (0, core_1.info)(`Working directory: ${config.directory}`);
@@ -34730,18 +34731,14 @@ exports.getPackageManager = getPackageManager;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.setPreview = void 0;
 const image_1 = __nccwpck_require__(7828);
+const strings_1 = __nccwpck_require__(3063);
 const hasHeader = (content) => content.match(/^#\s+/);
 const cleanUp = (content) => content
     .replace(/^(#\s+.+\n+)(!\[.+]\(.*\)\n?){1,2}\n?/, '$1\n')
     .replace(/^(#\s+.+\n+)(<img\s.*\/>\n?){1,2}\n?/, '$1\n');
-const titleCase = (title) => title
-    .replace(/([A-Z])/g, '$1')
-    .toLowerCase()
-    .replace(/(^|\s|-|_)\S/g, (match) => match.toUpperCase())
-    .replace(/[-_]/g, ' ');
 const setPreview = (content, config) => {
     if (!hasHeader(content)) {
-        const title = titleCase(config.image.parameters.title);
+        const title = (0, strings_1.titleCase)(config.image.parameters.title);
         content = `# ${title}\n\n${content}`;
     }
     const images = (0, image_1.getImages)(config).join('\n');
@@ -34921,6 +34918,23 @@ class Repository {
     }
 }
 exports.Repository = Repository;
+
+
+/***/ }),
+
+/***/ 3063:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.titleCase = void 0;
+const titleCase = (title) => title
+    .replace(/([A-Z])/g, '$1')
+    .toLowerCase()
+    .replace(/(^|\s|-|_)\S/g, (match) => match.toUpperCase())
+    .replace(/[-_]/g, ' ');
+exports.titleCase = titleCase;
 
 
 /***/ }),

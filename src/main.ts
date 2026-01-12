@@ -7,6 +7,7 @@ import { Repository } from './utils/repository'
 import { setPreview } from './utils/preview'
 import { setOutputs } from './utils/outputs'
 import { getPackageManager } from './utils/packageManagers'
+import { titleCase } from './utils/strings'
 
 const previewUpdater = async () => {
     // Inputs
@@ -30,7 +31,7 @@ const previewUpdater = async () => {
     const packageManager = getPackageManager(config)
 
     config.image.parameters.packageName = packageManager.name
-    config.image.parameters.title = config.repository.repo
+    config.image.parameters.title = titleCase(config.repository.repo)
     config.image.parameters.description = packageManager.description || config.repository.owner
 
     // Show working directory
