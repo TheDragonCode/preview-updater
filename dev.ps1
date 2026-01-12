@@ -11,7 +11,7 @@ Get-Content $envFile |
                 $key = $Matches['key'].Trim()
                 $val = $Matches['val'].Trim()
 
-                $env: $key = $val
+                Set-Item -Path "Env:$key" -Value $val
             }
         }
 
