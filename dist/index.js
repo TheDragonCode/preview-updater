@@ -34564,10 +34564,7 @@ const readConfig = (config, userConfigPath) => {
 exports.readConfig = readConfig;
 const exec = async (command) => {
     const execAsync = (0, node_util_1.promisify)(node_child_process_1.exec);
-    const { stdout, stderr } = await execAsync(command);
-    if (stderr !== '') {
-        throw new Error(stderr);
-    }
+    const { stdout } = await execAsync(command);
     return stdout.toString().trim();
 };
 exports.exec = exec;
