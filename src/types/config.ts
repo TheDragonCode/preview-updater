@@ -2,7 +2,7 @@ export interface ImageParameters {
     pattern: string;
     style: string;
     fontSize: string;
-    icon: string;
+    icon?: string;
 
     packageManager: "composer" | "npm" | "yarn" | "auto" | "none" | string;
     packageName?: string;
@@ -69,7 +69,7 @@ export const defaultConfig: Config = {
             pattern: "topography",
             style: "style_2",
             fontSize: "100px",
-            icon: "code",
+            icon: undefined,
 
             packageManager: "auto",
             packageGlobal: false,

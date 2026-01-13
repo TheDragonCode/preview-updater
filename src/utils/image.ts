@@ -1,6 +1,8 @@
 import type { Config, ImageParameters } from "../types/config";
 import { hasComposer, hasNpm, hasYarn } from "./packageManagers";
 import { encodeUri } from "./strings";
+import type { Package } from "../types/package";
+import { detectIcon } from "./icons";
 
 const detectPackageManager = (config: Config, visibility: string): string => {
     if (hasComposer(config)) {
@@ -45,7 +47,11 @@ const packageName = (image: ImageParameters): string => {
     return image?.packageName || "";
 };
 
-const render = (config: Config, theme: "light" | "dark"): string => {
+const render = (
+    config: Config,
+    packageData: Package,
+    theme: "light" | "dark",
+): string => {
     const image = config.image.parameters;
 
     const params = new URLSearchParams({
@@ -53,7 +59,7 @@ const render = (config: Config, theme: "light" | "dark"): string => {
         pattern: image.pattern,
         style: image.style,
         fontSize: image.fontSize,
-        images: image.icon,
+        images: image.icon || detectIcon(packageData),
         packageManager: packageManager(config),
         packageName: packageName(image),
         description: image.description || "",
@@ -66,11 +72,11 @@ const render = (config: Config, theme: "light" | "dark"): string => {
     );
 };
 
-export const getImages = (config: Config): string => {
+export const getImages = (config: Config, packageData: Package): string => {
     const title = config.image.parameters.title;
 
-    const light = render(config, "light");
-    const dark = render(config, "dark");
+    const light = render(config, packageData, "light");
+    const dark = render(config, packageData, "dark");
 
     return `<picture>
     <source media="(prefers-color-scheme: dark)" srcset="${dark}">

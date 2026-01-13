@@ -1,0 +1,10 @@
+{
+    "name": "preview-updater",
+    "description": "Lightweight preview update in your repository",
+    "dependencies": {
+        "@actions/core": "^2.0.2",
+        "@actions/github": "^7.0.0",
+        "deepmerge-ts": "^7.1.5",
+        "js-yaml": "^4.1.1"
+    }
+}

@@ -34383,11 +34383,12 @@ const preview_1 = __nccwpck_require__(1365);
 const outputs_1 = __nccwpck_require__(8595);
 const packageManagers_1 = __nccwpck_require__(2453);
 const strings_1 = __nccwpck_require__(3063);
+const config_1 = __nccwpck_require__(7799);
 const previewUpdater = async () => {
     // Inputs
     const { token, configPath } = (0, inputs_1.parse)();
     // Load Config
-    const config = (0, filesystem_1.readConfig)({
+    const config = (0, config_1.readConfig)({
         directory: (0, filesystem_1.cwd)(),
         repository: {
             owner: github_1.context.repo.owner,
@@ -34395,11 +34396,11 @@ const previewUpdater = async () => {
         },
     }, configPath);
     // Read names
-    const packageManager = (0, packageManagers_1.getPackageManager)(config);
-    config.image.parameters.packageName = packageManager.name;
-    config.image.parameters.title = (0, strings_1.titleCase)(config.image.parameters.title || config.repository.repo);
-    config.image.parameters.description =
-        packageManager.description || config.repository.owner;
+    const packageData = (0, packageManagers_1.getPackageManager)(config);
+    config.image.parameters.packageName ||= packageData.name;
+    config.image.parameters.title ||= (0, strings_1.titleCase)(config.repository.repo);
+    config.image.parameters.description ||=
+        packageData.description || config.repository.owner;
     // Show working directory
     (0, core_1.info)(`Working directory: ${config.directory}`);
     // Authenticate
@@ -34407,7 +34408,7 @@ const previewUpdater = async () => {
     await repo.authenticate();
     // Read file
     const content = (0, filesystem_1.readFile)(config, config.path.readme);
-    const preview = (0, preview_1.setPreview)(content, config);
+    const preview = (0, preview_1.setPreview)(content, config, packageData);
     if (content === preview) {
         (0, core_1.info)(`File "${config.path.readme}" is up to date`);
         return;
@@ -34460,7 +34461,7 @@ exports.defaultConfig = {
             pattern: "topography",
             style: "style_2",
             fontSize: "100px",
-            icon: "code",
+            icon: undefined,
             packageManager: "auto",
             packageGlobal: false,
             packageName: undefined,
@@ -34488,6 +34489,63 @@ exports.defaultConfig = {
         },
     },
 };
+
+
+/***/ }),
+
+/***/ 7799:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.readConfig = void 0;
+const config_1 = __nccwpck_require__(7899);
+const deepmerge_ts_1 = __nccwpck_require__(5584);
+const yaml = __importStar(__nccwpck_require__(4281));
+const filesystem_1 = __nccwpck_require__(9742);
+const readConfig = (config, userConfigPath) => {
+    const content = (0, filesystem_1.readFile)(config, userConfigPath);
+    if (content === "") {
+        return (0, deepmerge_ts_1.deepmerge)(config_1.defaultConfig, config);
+    }
+    const userConfig = yaml.load(content);
+    return (0, deepmerge_ts_1.deepmerge)(config_1.defaultConfig, userConfig, config);
+};
+exports.readConfig = readConfig;
 
 
 /***/ }),
@@ -34531,13 +34589,8 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.exec = exports.readConfig = exports.writeFile = exports.readFile = exports.fileExists = exports.cwd = void 0;
+exports.writeFile = exports.readFile = exports.fileExists = exports.cwd = void 0;
 const fs = __importStar(__nccwpck_require__(3024));
-const yaml = __importStar(__nccwpck_require__(4281));
-const deepmerge_ts_1 = __nccwpck_require__(5584);
-const node_child_process_1 = __nccwpck_require__(1421);
-const node_util_1 = __nccwpck_require__(7975);
-const config_1 = __nccwpck_require__(7899);
 const cwd = () => {
     const path = process.env.GITHUB_WORKSPACE;
     if (path === undefined) {
@@ -34560,21 +34613,51 @@ const writeFile = (config, filename, content) => {
     fs.writeFileSync(filePath(config, filename), content);
 };
 exports.writeFile = writeFile;
-const readConfig = (config, userConfigPath) => {
-    const content = (0, exports.readFile)(config, userConfigPath);
-    if (content === "") {
-        return (0, deepmerge_ts_1.deepmerge)(config_1.defaultConfig, config);
+
+
+/***/ }),
+
+/***/ 5983:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.detectIcon = exports.defaultJsIcon = exports.defaultPhpIcon = exports.jsIcons = exports.phpIcons = void 0;
+exports.phpIcons = [
+    { query: "laravel/", icon: "https://laravel.com/img/logomark.min.svg" },
+    { query: "illuminate/", icon: "https://laravel.com/img/logomark.min.svg" },
+    {
+        query: "symfony/",
+        icon: "https://symfony.com/logos/symfony_black_03.svg",
+    },
+];
+exports.jsIcons = [];
+exports.defaultPhpIcon = "https://www.php.net/images/logos/new-php-logo.svg";
+exports.defaultJsIcon = "code";
+const find = (dependencies, icons) => {
+    const names = Object.keys(dependencies);
+    for (const name of names) {
+        for (const icon of icons) {
+            if (name.includes(icon.query)) {
+                return icon.icon;
+            }
+        }
     }
-    const userConfig = yaml.load(content);
-    return (0, deepmerge_ts_1.deepmerge)(config_1.defaultConfig, userConfig, config);
+    return undefined;
 };
-exports.readConfig = readConfig;
-const exec = async (command) => {
-    const execAsync = (0, node_util_1.promisify)(node_child_process_1.exec);
-    const { stdout } = await execAsync(command);
-    return stdout.toString().trim();
+const detectIcon = (packageData) => {
+    if (packageData?.require !== undefined) {
+        const phpIcon = find(packageData.require, exports.phpIcons);
+        return phpIcon || exports.defaultPhpIcon;
+    }
+    if (packageData?.dependencies !== undefined) {
+        const jsIcon = find(packageData.dependencies, exports.jsIcons);
+        return jsIcon || exports.defaultJsIcon;
+    }
+    return "code";
 };
-exports.exec = exec;
+exports.detectIcon = detectIcon;
 
 
 /***/ }),
@@ -34587,12 +34670,8 @@ exports.exec = exec;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getImages = void 0;
 const packageManagers_1 = __nccwpck_require__(2453);
-const encodeUri = (value) => {
-    if (value === "" || value === undefined) {
-        return "";
-    }
-    return encodeURIComponent(value);
-};
+const strings_1 = __nccwpck_require__(3063);
+const icons_1 = __nccwpck_require__(5983);
 const detectPackageManager = (config, visibility) => {
     if ((0, packageManagers_1.hasComposer)(config)) {
         return `composer${visibility} require`;
@@ -34616,8 +34695,10 @@ const packageManager = (config) => {
             return `yarn${visibility} add`;
         case "auto":
             return detectPackageManager(config, visibility);
-        default:
+        case "none":
             return "";
+        default:
+            return config.image.parameters.packageManager;
     }
 };
 const packageName = (image) => {
@@ -34626,26 +34707,26 @@ const packageName = (image) => {
     }
     return image?.packageName || "";
 };
-const render = (config, theme) => {
+const render = (config, packageData, theme) => {
     const image = config.image.parameters;
     const params = new URLSearchParams({
         theme: theme,
         pattern: image.pattern,
         style: image.style,
         fontSize: image.fontSize,
-        images: image.icon,
+        images: image.icon || (0, icons_1.detectIcon)(packageData),
         packageManager: packageManager(config),
         packageName: packageName(image),
         description: image.description || "",
     });
-    return (config.image.url.replace("{title}", encodeUri(image.title)) +
+    return (config.image.url.replace("{title}", (0, strings_1.encodeUri)(image.title)) +
         "?" +
         params.toString());
 };
-const getImages = (config) => {
+const getImages = (config, packageData) => {
     const title = config.image.parameters.title;
-    const light = render(config, "light");
-    const dark = render(config, "dark");
+    const light = render(config, packageData, "light");
+    const dark = render(config, packageData, "dark");
     return `<picture>
     <source media="(prefers-color-scheme: dark)" srcset="${dark}">
     <img src="${light}" alt="${title}">
@@ -34743,40 +34824,35 @@ exports.setPreview = void 0;
 const image_1 = __nccwpck_require__(7828);
 const strings_1 = __nccwpck_require__(3063);
 const hasHeader = (content) => content.match(/^#\s+/);
-const cleanUp = (content) => content
-    .replace(/^(#\s+.+[\n\s]+)\s*<picture>[.\w\W]+<\/picture>[\n\s]*/, "$1")
-    .replace(/^(#\s+.+[\n\s]+)(!\[.+]\(.*\)\n?){1,2}[\n\s]*/, "$1")
-    .replace(/^(#\s+.+[\n\s]+)(<img\s.*\/>\n?){1,2}[\n\s]*/, "$1");
-const setPreview = (content, config) => {
+const setPreview = (content, config, packageData) => {
     if (!hasHeader(content)) {
         const title = (0, strings_1.titleCase)(config.image.parameters.title);
         content = `# ${title}\n\n${content}`;
     }
-    const images = (0, image_1.getImages)(config);
+    const images = (0, image_1.getImages)(config, packageData);
     const replace = "$1";
-    return cleanUp(content).replace(/^(#\s+.+[\n\s]+)/, `${replace}${images}\n\n`);
+    return (0, strings_1.removeImages)(content).replace(/^(#\s+.+[\n\s]+)/, `${replace}${images}\n\n`);
 };
 exports.setPreview = setPreview;
 
 
 /***/ }),
 
-/***/ 3678:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ 1896:
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.randomizer = void 0;
-const randomizer = (length = 8) => {
-    const chars = "abcdefghijklmnopqrstuvwxyz";
-    let result = "";
-    for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
+exports.exec = void 0;
+const node_util_1 = __nccwpck_require__(7975);
+const node_child_process_1 = __nccwpck_require__(1421);
+const exec = async (command) => {
+    const execAsync = (0, node_util_1.promisify)(node_child_process_1.exec);
+    const { stdout } = await execAsync(command);
+    return stdout.toString().trim();
 };
-exports.randomizer = randomizer;
+exports.exec = exec;
 
 
 /***/ }),
@@ -34788,8 +34864,8 @@ exports.randomizer = randomizer;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Repository = void 0;
-const filesystem_1 = __nccwpck_require__(9742);
-const randomizer_1 = __nccwpck_require__(3678);
+const processes_1 = __nccwpck_require__(1896);
+const strings_1 = __nccwpck_require__(3063);
 class Repository {
     constructor(config, octokit) {
         this._currentBranch = "";
@@ -34800,8 +34876,8 @@ class Repository {
     async authenticate() {
         try {
             const author = this._config.repository.commit.author;
-            await (0, filesystem_1.exec)(`git config user.name "${author.name}"`);
-            await (0, filesystem_1.exec)(`git config user.email "${author.email}"`);
+            await (0, processes_1.exec)(`git config user.name "${author.name}"`);
+            await (0, processes_1.exec)(`git config user.email "${author.email}"`);
         }
         catch (error) {
             // @ts-expect-error
@@ -34812,11 +34888,11 @@ class Repository {
     async branchExists() {
         try {
             const hasLocalBranch = async () => {
-                const result = await (0, filesystem_1.exec)(`git branch --list "${this.branchName()}"`);
+                const result = await (0, processes_1.exec)(`git branch --list "${this.branchName()}"`);
                 return result.includes(this.branchName());
             };
             const hasRemoteBranch = async () => {
-                const result = await (0, filesystem_1.exec)(`git ls-remote --heads origin "${this.branchName()}"`);
+                const result = await (0, processes_1.exec)(`git ls-remote --heads origin "${this.branchName()}"`);
                 return result.includes(this.branchName());
             };
             return (await hasLocalBranch()) || (await hasRemoteBranch());
@@ -34830,7 +34906,7 @@ class Repository {
     async checkoutBranch(isNew) {
         try {
             this._newBranch = isNew;
-            await (0, filesystem_1.exec)(`git switch ${isNew ? "-c" : ""} "${this.branchName()}"`);
+            await (0, processes_1.exec)(`git switch ${isNew ? "-c" : ""} "${this.branchName()}"`);
         }
         catch (error) {
             // @ts-expect-error
@@ -34840,7 +34916,7 @@ class Repository {
     }
     async stage() {
         try {
-            await (0, filesystem_1.exec)(`git add ${this._config.path.readme}`);
+            await (0, processes_1.exec)(`git add ${this._config.path.readme}`);
         }
         catch (error) {
             // @ts-expect-error
@@ -34853,7 +34929,7 @@ class Repository {
             const message = this._config.repository.commit.title +
                 "\n" +
                 this._config.repository.commit.body;
-            await (0, filesystem_1.exec)(`git commit -m "${message}"`);
+            await (0, processes_1.exec)(`git commit -m "${message}"`);
         }
         catch (error) {
             // @ts-expect-error
@@ -34867,7 +34943,7 @@ class Repository {
             if (this._newBranch) {
                 cmd += ` --set-upstream origin ${this.branchName()}`;
             }
-            await (0, filesystem_1.exec)(cmd);
+            await (0, processes_1.exec)(cmd);
         }
         catch (error) {
             // @ts-expect-error
@@ -34877,7 +34953,7 @@ class Repository {
     }
     async createPullRequest() {
         try {
-            const defaultBranch = await (0, filesystem_1.exec)(`git remote show origin | grep 'HEAD branch' | cut -d ' ' -f5`);
+            const defaultBranch = await (0, processes_1.exec)(`git remote show origin | grep 'HEAD branch' | cut -d ' ' -f5`);
             return this._octokit.rest.pulls.create({
                 owner: this._config.repository.owner,
                 repo: this._config.repository.repo,
@@ -34925,7 +35001,7 @@ class Repository {
     }
     branchName() {
         if (this._currentBranch === "") {
-            this._currentBranch = this._config.repository.commit.branch.replace("{random}", (0, randomizer_1.randomizer)());
+            this._currentBranch = this._config.repository.commit.branch.replace("{random}", (0, strings_1.randomString)());
         }
         return this._currentBranch;
     }
@@ -34941,7 +35017,7 @@ exports.Repository = Repository;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.titleCase = void 0;
+exports.randomString = exports.encodeUri = exports.removeImages = exports.titleCase = void 0;
 const titleCase = (title) => {
     if (title === "" || title === undefined) {
         return "";
@@ -34953,6 +35029,27 @@ const titleCase = (title) => {
         .replace(/[-_]/g, " ");
 };
 exports.titleCase = titleCase;
+const removeImages = (content) => content
+    .replace(/^(#\s+.+[\n\s]+)\s*<picture>[.\w\W]+<\/picture>[\n\s]*/, "$1")
+    .replace(/^(#\s+.+[\n\s]+)(!\[.+]\(.*\)\n?){1,2}[\n\s]*/, "$1")
+    .replace(/^(#\s+.+[\n\s]+)(<img\s.*\/>\n?){1,2}[\n\s]*/, "$1");
+exports.removeImages = removeImages;
+const encodeUri = (value) => {
+    if (value === "" || value === undefined) {
+        return "";
+    }
+    return encodeURIComponent(value);
+};
+exports.encodeUri = encodeUri;
+const randomString = (length = 8) => {
+    const chars = "abcdefghijklmnopqrstuvwxyz";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+};
+exports.randomString = randomString;
 
 
 /***/ }),
