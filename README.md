@@ -71,6 +71,8 @@ Create `.github/preview-updater.yml` (or provide your own path via `configPath`)
 All fields are optional—omitted ones fall back to defaults.
 
 ```yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/TheDragonCode/preview-updater/refs/heads/main/resources/schema.json
+
 path:
     readme: README.md        # Target file to update
 
