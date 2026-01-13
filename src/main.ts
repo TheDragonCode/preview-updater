@@ -9,6 +9,7 @@ import { setOutputs } from "./utils/outputs";
 import { getPackageManager } from "./utils/packageManagers";
 import { titleCase } from "./utils/strings";
 import { readConfig } from "./utils/config";
+import type { Package } from "./types/package";
 
 const previewUpdater = async () => {
     // Inputs
@@ -28,12 +29,12 @@ const previewUpdater = async () => {
     );
 
     // Read names
-    const packageManager = getPackageManager(config);
+    const packageData: Package = getPackageManager(config);
 
-    config.image.parameters.packageName ||= packageManager.name;
+    config.image.parameters.packageName ||= packageData.name;
     config.image.parameters.title ||= titleCase(config.repository.repo);
     config.image.parameters.description ||=
-        packageManager.description || config.repository.owner;
+        packageData.description || config.repository.owner;
 
     // Show working directory
     info(`Working directory: ${config.directory}`);
@@ -44,7 +45,7 @@ const previewUpdater = async () => {
 
     // Read file
     const content = readFile(config, config.path.readme);
-    const preview = setPreview(content, config);
+    const preview = setPreview(content, config, packageData);
 
     if (content === preview) {
         info(`File "${config.path.readme}" is up to date`);
