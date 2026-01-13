@@ -34473,7 +34473,7 @@ exports.defaultConfig = {
         owner: undefined,
         repo: undefined,
         commit: {
-            branch: "preview-banner-{random}",
+            branch: "preview-{random}",
             title: "docs(preview): Update preview",
             body: undefined,
             author: {
@@ -34792,7 +34792,7 @@ const filesystem_1 = __nccwpck_require__(9742);
 const randomizer_1 = __nccwpck_require__(3678);
 class Repository {
     constructor(config) {
-        this._currentBranch = "";
+        this._currentBranch = '';
         this._newBranch = false;
         this._config = config;
     }
@@ -34829,17 +34829,17 @@ class Repository {
     async checkoutBranch(isNew) {
         try {
             this._newBranch = isNew;
-            await (0, filesystem_1.exec)(`git switch ${isNew ? "-c" : ""} "${this.branchName()}"`);
+            await (0, filesystem_1.exec)(`git switch ${isNew ? '-c' : ''} "${this.branchName()}"`);
         }
         catch (error) {
             // @ts-expect-error
-            error.message = `Error checking out ${isNew ? "new" : "existing"} branch "${this.branchName()}": ${error.message}`;
+            error.message = `Error checking out ${isNew ? 'new' : 'existing'} branch "${this.branchName()}": ${error.message}`;
             throw error;
         }
     }
     async stage() {
         try {
-            await (0, filesystem_1.exec)("git add " + this._config.path.readme);
+            await (0, filesystem_1.exec)('git add ' + this._config.path.readme);
         }
         catch (error) {
             // @ts-expect-error
@@ -34850,9 +34850,9 @@ class Repository {
     async commit() {
         try {
             const message = this._config.repository.commit.title +
-                "\n" +
+                '\n' +
                 this._config.repository.commit.body;
-            (0, filesystem_1.exec)(`git commit -m "${message}"`);
+            await (0, filesystem_1.exec)(`git commit -m "${message}"`);
         }
         catch (error) {
             // @ts-expect-error
@@ -34862,12 +34862,11 @@ class Repository {
     }
     async push() {
         try {
-            let cmd = "git push";
+            let cmd = 'git push';
             if (this._newBranch) {
                 cmd += ` --set-upstream origin ${this.branchName()}`;
             }
-            (0, filesystem_1.exec)(cmd);
-            this._newBranch = false;
+            await (0, filesystem_1.exec)(cmd);
         }
         catch (error) {
             // @ts-expect-error
@@ -34884,7 +34883,7 @@ class Repository {
                 title: this._config.repository.pullRequest.title,
                 body: this._config.repository.pullRequest.body,
                 head: this.branchName(),
-                base: defaultBranch.trim(),
+                base: defaultBranch
             });
         }
         catch (error) {
@@ -34899,7 +34898,7 @@ class Repository {
                 owner: this._config.repository.owner,
                 repo: this._config.repository.repo,
                 issue_number: issueNumber,
-                assignees: assignees,
+                assignees: assignees
             });
         }
         catch (error) {
@@ -34914,7 +34913,7 @@ class Repository {
                 owner: this._config.repository.owner,
                 repo: this._config.repository.repo,
                 issue_number: issueNumber,
-                labels,
+                labels
             });
         }
         catch (error) {
@@ -34924,8 +34923,8 @@ class Repository {
         }
     }
     branchName() {
-        if (this._currentBranch === "") {
-            this._currentBranch = this._config.repository.commit.branch.replace("{random}", (0, randomizer_1.randomizer)());
+        if (this._currentBranch === '') {
+            this._currentBranch = this._config.repository.commit.branch.replace('{random}', (0, randomizer_1.randomizer)());
         }
         return this._currentBranch;
     }
