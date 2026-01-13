@@ -15,7 +15,7 @@ export const setPreview = (content: string, config: Config) => {
         content = `# ${ title }\n\n${ content }`
     }
 
-    const images = getImages(config).join('\n')
+    const images: string = getImages(config)
 
     return cleanUp(content).replace(/^(#\s+.+\n\n)/, '$1' + images + '\n\n')
 }

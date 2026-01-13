@@ -45,7 +45,7 @@ const packageManager = (config: Config): string => {
 
 const packageName = (image: ImageParameters): string => image.packageManager !== 'none' ? image.packageName : ''
 
-const render = (config: Config, theme: 'light' | 'dark', suffix: string = ''): string => {
+const render = (config: Config, theme: 'light' | 'dark'): string => {
     const image = config.image.parameters
 
     const params = new URLSearchParams({
@@ -59,14 +59,17 @@ const render = (config: Config, theme: 'light' | 'dark', suffix: string = ''): s
         description: image.description
     })
 
-    return config.image.url.replace('{title}', encodeUri(image.title)) + '?' + params.toString() + suffix
+    return config.image.url.replace('{title}', encodeUri(image.title)) + '?' + params.toString()
 }
 
-const format = (title: string, url: string): string => `![${ title }](${ url })`
+export const getImages = (config: Config): string => {
+    const title = config.image.parameters.title
 
-export const getImages = (config: Config): string[] => {
-    const light = format(config.image.parameters.title, render(config, 'light', '#gh-light-mode-only'))
-    const dark = format(config.image.parameters.title, render(config, 'dark', '#gh-dark-mode-only'))
+    const light = render(config, 'light')
+    const dark = render(config, 'dark')
 
-    return [light, dark]
+    return `<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="${ dark }">
+    <img src="${ light }" alt="${ title }">
+</picture>`
 }

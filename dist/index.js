@@ -34621,7 +34621,7 @@ const packageManager = (config) => {
     }
 };
 const packageName = (image) => image.packageManager !== 'none' ? image.packageName : '';
-const render = (config, theme, suffix = '') => {
+const render = (config, theme) => {
     const image = config.image.parameters;
     const params = new URLSearchParams({
         theme: theme,
@@ -34633,13 +34633,16 @@ const render = (config, theme, suffix = '') => {
         packageName: packageName(image),
         description: image.description
     });
-    return config.image.url.replace('{title}', encodeUri(image.title)) + '?' + params.toString() + suffix;
+    return config.image.url.replace('{title}', encodeUri(image.title)) + '?' + params.toString();
 };
-const format = (title, url) => `![${title}](${url})`;
 const getImages = (config) => {
-    const light = format(config.image.parameters.title, render(config, 'light', '#gh-light-mode-only'));
-    const dark = format(config.image.parameters.title, render(config, 'dark', '#gh-dark-mode-only'));
-    return [light, dark];
+    const title = config.image.parameters.title;
+    const light = render(config, 'light');
+    const dark = render(config, 'dark');
+    return `<picture>
+    <source media="(prefers-color-scheme: dark)" srcset="${dark}">
+    <img src="${light}" alt="${title}">
+</picture>`;
 };
 exports.getImages = getImages;
 
@@ -34741,7 +34744,7 @@ const setPreview = (content, config) => {
         const title = (0, strings_1.titleCase)(config.image.parameters.title);
         content = `# ${title}\n\n${content}`;
     }
-    const images = (0, image_1.getImages)(config).join('\n');
+    const images = (0, image_1.getImages)(config);
     return cleanUp(content).replace(/^(#\s+.+\n\n)/, '$1' + images + '\n\n');
 };
 exports.setPreview = setPreview;
