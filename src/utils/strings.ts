@@ -9,3 +9,11 @@ export const titleCase = (title: string | undefined) => {
         .replace(/(^|\s|-|_)\S/g, (match: string) => match.toUpperCase())
         .replace(/[-_]/g, " ");
 };
+
+export const encodeUri = (value: string | undefined): string => {
+    if (value === "" || value === undefined) {
+        return "";
+    }
+
+    return encodeURIComponent(value);
+};
