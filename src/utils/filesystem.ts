@@ -20,6 +20,8 @@ const filePath = (config: Config, filename: string): string => `${ config.direct
 export const fileExists = (config: Config, filename: string): boolean => fs.existsSync(filePath(config, filename))
 
 export const readFile = (config: Config, filename: string): string => {
+    console.log(filePath(config, filename),fs.existsSync(filePath(config, filename)))
+    
     if (! fs.existsSync(filePath(config, filename))) {
         return ''
     }

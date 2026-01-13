@@ -34550,6 +34550,7 @@ const filePath = (config, filename) => `${config.directory}/${filename}`;
 const fileExists = (config, filename) => fs.existsSync(filePath(config, filename));
 exports.fileExists = fileExists;
 const readFile = (config, filename) => {
+    console.log(filePath(config, filename), fs.existsSync(filePath(config, filename)));
     if (!fs.existsSync(filePath(config, filename))) {
         return '';
     }
