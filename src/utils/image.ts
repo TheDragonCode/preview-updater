@@ -1,13 +1,6 @@
 import type { Config, ImageParameters } from "../types/config";
 import { hasComposer, hasNpm, hasYarn } from "./packageManagers";
-
-const encodeUri = (value: string | undefined): string => {
-    if (value === "" || value === undefined) {
-        return "";
-    }
-
-    return encodeURIComponent(value);
-};
+import { encodeUri } from './strings'
 
 const detectPackageManager = (config: Config, visibility: string): string => {
     if (hasComposer(config)) {
