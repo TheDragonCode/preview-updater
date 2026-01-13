@@ -20,8 +20,6 @@ const filePath = (config: Config, filename: string): string => `${ config.direct
 export const fileExists = (config: Config, filename: string): boolean => fs.existsSync(filePath(config, filename))
 
 export const readFile = (config: Config, filename: string): string => {
-    console.log(filePath(config, filename),fs.existsSync(filePath(config, filename)))
-    
     if (! fs.existsSync(filePath(config, filename))) {
         return ''
     }
@@ -36,7 +34,7 @@ export const writeFile = (config: Config, filename: string, content: string): vo
 export const readConfig = (override: Config, userConfigPath: string, baseConfig: Config | undefined = undefined): Config => {
     const dataConfig: Config = baseConfig ?? defaultConfig
 
-    const content: string = readFile(dataConfig, userConfigPath)
+    const content: string = readFile(override, userConfigPath)
 
     if (content === '') {
         return <Config>deepmerge(dataConfig, override)

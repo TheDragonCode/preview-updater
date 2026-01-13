@@ -26,7 +26,6 @@ const detectPackageManager = (config: Config, visibility: string): string => {
 }
 
 const packageManager = (config: Config): string => {
-
     const visibility = config.image.parameters.packageGlobal ? ' global' : ''
 
     switch (config.image.parameters.packageManager) {

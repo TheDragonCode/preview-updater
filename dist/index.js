@@ -34550,7 +34550,6 @@ const filePath = (config, filename) => `${config.directory}/${filename}`;
 const fileExists = (config, filename) => fs.existsSync(filePath(config, filename));
 exports.fileExists = fileExists;
 const readFile = (config, filename) => {
-    console.log(filePath(config, filename), fs.existsSync(filePath(config, filename)));
     if (!fs.existsSync(filePath(config, filename))) {
         return '';
     }
@@ -34563,7 +34562,7 @@ const writeFile = (config, filename, content) => {
 exports.writeFile = writeFile;
 const readConfig = (override, userConfigPath, baseConfig = undefined) => {
     const dataConfig = baseConfig ?? config_1.defaultConfig;
-    const content = (0, exports.readFile)(dataConfig, userConfigPath);
+    const content = (0, exports.readFile)(override, userConfigPath);
     if (content === '') {
         return (0, deepmerge_ts_1.deepmerge)(dataConfig, override);
     }
