@@ -49,7 +49,13 @@
                             "anyOf": [
                                 {
                                     "type": "string",
-                                    "enum": ["composer", "npm", "yarn", "auto", "none"]
+                                    "enum": [
+                                        "composer",
+                                        "npm",
+                                        "yarn",
+                                        "auto",
+                                        "none"
+                                    ]
                                 },
                                 {
                                     "type": "string"
