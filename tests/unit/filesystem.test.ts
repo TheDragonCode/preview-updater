@@ -8,9 +8,6 @@ test("read config", () => {
 
     expect(data.directory).toBe(process.cwd());
 
-    expect(data.image.parameters.packageName).toBe(
-        "TheDragonCode/preview-updater",
-    );
     expect(data.image.parameters.title).toBe("Preview Updater");
     expect(data.image.parameters.description).toBe(
         "Lightweight preview update in your repository",
@@ -22,7 +19,10 @@ test("read config", () => {
         defaultConfig.image.parameters.pattern,
     );
 
-    expect(data.image.parameters.packageManager).toBe("none");
+    expect(data.image.parameters.packageManager).toBe("GitHub Actions uses:");
+    expect(data.image.parameters.packageName).toBe(
+        "TheDragonCode/preview-updater",
+    );
     expect(data.image.parameters.icon).toBe("photograph");
 });
 

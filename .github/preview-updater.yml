@@ -1,6 +1,7 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/TheDragonCode/preview-updater/refs/heads/main/resources/schema.json
+# $schema: ../resources/schema.json
 
 image:
     parameters:
-        packageManager: 'none'
         icon: 'photograph'
+        packageManager: 'GitHub Actions uses:'
+        packageName: 'TheDragonCode/preview-updater@v1'
