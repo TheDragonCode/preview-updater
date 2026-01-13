@@ -45,20 +45,20 @@ const previewUpdater = async () => {
     const content = readFile(config, config.path.readme)
     const preview = setPreview(content, config)
 
-    if (content !== preview) {
-        // Checkout branch
-        const branchExists = await repo.branchExists()
-        info(`Checkout ${ branchExists ? 'existing' : 'new' } branch named "${ repo.branchName() }"`)
-        await repo.checkoutBranch(! branchExists)
-
-        // Write a file
-        info(`Update readme in "${ config.path.readme }" file`)
-        writeFile(config, config.path.readme, preview)
-    } else {
+    if (content === preview) {
         info(`File "${ config.path.readme }" is up to date`)
 
         return
     }
+
+    // Checkout branch
+    const branchExists = await repo.branchExists()
+    info(`Checkout ${ branchExists ? 'existing' : 'new' } branch named "${ repo.branchName() }"`)
+    await repo.checkoutBranch(! branchExists)
+
+    // Write a file
+    info(`Update readme in "${ config.path.readme }" file`)
+    writeFile(config, config.path.readme, preview)
 
     // Stage and commit changes
     await repo.stage()

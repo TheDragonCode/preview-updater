@@ -34408,19 +34408,17 @@ const previewUpdater = async () => {
     // Read file
     const content = (0, filesystem_1.readFile)(config, config.path.readme);
     const preview = (0, preview_1.setPreview)(content, config);
-    if (content !== preview) {
-        // Checkout branch
-        const branchExists = await repo.branchExists();
-        (0, core_1.info)(`Checkout ${branchExists ? 'existing' : 'new'} branch named "${repo.branchName()}"`);
-        await repo.checkoutBranch(!branchExists);
-        // Write a file
-        (0, core_1.info)(`Update readme in "${config.path.readme}" file`);
-        (0, filesystem_1.writeFile)(config, config.path.readme, preview);
-    }
-    else {
+    if (content === preview) {
         (0, core_1.info)(`File "${config.path.readme}" is up to date`);
         return;
     }
+    // Checkout branch
+    const branchExists = await repo.branchExists();
+    (0, core_1.info)(`Checkout ${branchExists ? 'existing' : 'new'} branch named "${repo.branchName()}"`);
+    await repo.checkoutBranch(!branchExists);
+    // Write a file
+    (0, core_1.info)(`Update readme in "${config.path.readme}" file`);
+    (0, filesystem_1.writeFile)(config, config.path.readme, preview);
     // Stage and commit changes
     await repo.stage();
     await repo.commit();
