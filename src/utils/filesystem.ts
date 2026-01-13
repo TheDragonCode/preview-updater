@@ -31,18 +31,16 @@ export const writeFile = (config: Config, filename: string, content: string): vo
     fs.writeFileSync(filePath(config, filename), content)
 }
 
-export const readConfig = (override: Config, userConfigPath: string, baseConfig: Config | undefined = undefined): Config => {
-    const dataConfig: Config = baseConfig ?? defaultConfig
-
-    const content: string = readFile(override, userConfigPath)
+export const readConfig = (config: Config, userConfigPath: string): Config => {
+    const content: string = readFile(config, userConfigPath)
 
     if (content === '') {
-        return <Config>deepmerge(dataConfig, override)
+        return <Config>deepmerge(defaultConfig, config)
     }
 
     const userConfig = <Config>yaml.load(content)
 
-    return <Config>deepmerge(dataConfig, userConfig, override)
+    return <Config>deepmerge(defaultConfig, userConfig, config)
 }
 
 export const exec = async (command: string): Promise<string> => {
