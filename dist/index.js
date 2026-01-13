@@ -34408,7 +34408,6 @@ const previewUpdater = async () => {
     // Read file
     const content = (0, filesystem_1.readFile)(config, config.path.readme);
     const preview = (0, preview_1.setPreview)(content, config);
-    console.log(preview);
     if (content === preview) {
         (0, core_1.info)(`File "${config.path.readme}" is up to date`);
         return;
@@ -34738,16 +34737,16 @@ const image_1 = __nccwpck_require__(7828);
 const strings_1 = __nccwpck_require__(3063);
 const hasHeader = (content) => content.match(/^#\s+/);
 const cleanUp = (content) => content
-    .replace(/^(#\s+.+\n+)\s*<picture>[.\w\W]+<\/picture>[\n\s]*/, '$1')
-    .replace(/^(#\s+.+\n+)(!\[.+]\(.*\)\n?){1,2}[\n\s]*/, '$1\n')
-    .replace(/^(#\s+.+\n+)(<img\s.*\/>\n?){1,2}[\n\s]*/, '$1\n');
+    .replace(/^(#\s+.+[\n\s]+)\s*<picture>[.\w\W]+<\/picture>[\n\s]*/, '$1\n')
+    .replace(/^(#\s+.+[\n\s]+)(!\[.+]\(.*\)\n?){1,2}[\n\s]*/, '$1\n')
+    .replace(/^(#\s+.+[\n\s]+)(<img\s.*\/>\n?){1,2}[\n\s]*/, '$1\n');
 const setPreview = (content, config) => {
     if (!hasHeader(content)) {
         const title = (0, strings_1.titleCase)(config.image.parameters.title);
         content = `# ${title}\n\n${content}`;
     }
     const images = (0, image_1.getImages)(config);
-    return cleanUp(content).replace(/^(#\s+.+\n\n)/, '$1' + images + '\n\n');
+    return cleanUp(content).replace(/^(#\s+.+[\n\s]+)/, '$1' + images + '\n\n');
 };
 exports.setPreview = setPreview;
 
