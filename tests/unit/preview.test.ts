@@ -8,3 +8,4 @@ test('with-two-images', () => expect(getReadme('with-two-images.md')).toMatchSna
 test('with-two-images-without-header', () => expect(getReadme('with-two-images-without-header.md')).toMatchSnapshot())
 test('without-all', () => expect(getReadme('without-all.md')).toMatchSnapshot())
 test('without-images', () => expect(getReadme('without-images.md')).toMatchSnapshot())
+test('html-tag', () => expect(getReadme('html-tag.md')).toMatchSnapshot())
