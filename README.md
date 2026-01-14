@@ -123,7 +123,7 @@ repository:
         title: Update preview
         body: ''
         assignees: [ ]
-        labels: [ ]
+        labels: [ 'preview' ]
 ```
 
 Currently, the project generates previews through [banners.beyondco.de](https://banners.beyondco.de) and the parameters
