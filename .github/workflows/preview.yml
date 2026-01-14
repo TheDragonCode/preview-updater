@@ -2,7 +2,7 @@ name: Preview Updater
 
 on:
     schedule:
-        -   cron: '20 2 1 * *'
+        -   cron: '20 2 * * *'
     workflow_dispatch:
 
 permissions:
@@ -10,15 +10,5 @@ permissions:
     pull-requests: write
 
 jobs:
-    update:
-        runs-on: ubuntu-latest
-
-        steps:
-            -   uses: actions/checkout@v6
-                with:
-                    fetch-depth: 0
-
-            -   name: Update Previews
-                uses: ./
-                with:
-                    token: ${{ secrets.GITHUB_TOKEN || env.GITHUB_TOKEN }}
+    preview:
+        uses: TheDragonCode/.github/.github/workflows/preview.yml@main
