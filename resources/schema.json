@@ -95,7 +95,7 @@
                         "branch": {
                             "type": "string",
                             "description": "Branch name for the commit",
-                            "default": "preview-{random}"
+                            "default": "preview/banner-{random}"
                         },
                         "title": {
                             "type": "string",
