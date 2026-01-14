@@ -16,7 +16,7 @@ const previewUpdater = async () => {
     const { token, configPath } = parse();
 
     // Load Config
-    const config: Config = readConfig(
+    const config: Config = await readConfig(
         <Config>{
             directory: cwd(),
 

@@ -3,8 +3,11 @@ import { type Config, defaultConfig } from "../../src/types/config";
 import { CONFIG_PATH } from "../../src/utils/inputs";
 import { readConfig } from "../../src/utils/config";
 
-test("read config", () => {
-    const data: Config = readConfig(rawTestConfig, CONFIG_PATH.defaultValue);
+test("read config", async () => {
+    const data: Config = await readConfig(
+        rawTestConfig,
+        CONFIG_PATH.defaultValue,
+    );
 
     expect(data.directory).toBe(process.cwd());
 
@@ -26,8 +29,8 @@ test("read config", () => {
     expect(data.image.parameters.icon).toBe("photograph");
 });
 
-test("custom config", () => {
-    const data: Config = readConfig(
+test("custom config", async () => {
+    const data: Config = await readConfig(
         <Config>{
             directory: process.cwd(),
         },
