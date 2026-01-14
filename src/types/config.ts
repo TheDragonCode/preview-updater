@@ -99,7 +99,7 @@ export const defaultConfig: Config = {
             title: "Update preview",
             body: undefined,
             assignees: [],
-            labels: [],
+            labels: ["preview"],
         },
     },
 };

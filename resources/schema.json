@@ -151,7 +151,9 @@
                                 "type": "string"
                             },
                             "description": "Labels list",
-                            "default": []
+                            "default": [
+                                "preview"
+                            ]
                         }
                     }
                 }
