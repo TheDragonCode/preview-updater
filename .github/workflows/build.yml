@@ -73,7 +73,7 @@ jobs:
             -   uses: actions/download-artifact@v7
                 with:
                     name: updater
-                    path: builds
+                    path: dist
 
             -   name: Create a Pull Request
                 uses: peter-evans/create-pull-request@v8
