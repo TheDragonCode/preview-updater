@@ -37,7 +37,7 @@ jobs:
                     fetch-depth: 0
 
             -   name: Update banner
-                uses: TheDragonCode/github-preview-updater@v1
+                uses: TheDragonCode/github-preview-updater@v2
                 with:
                     # Personal access token (PAT) used when interacting with Git and GitHub.
                     #
