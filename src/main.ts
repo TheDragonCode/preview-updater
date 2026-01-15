@@ -54,7 +54,7 @@ const previewUpdater = async () => {
     config.package ||= defaultPackage;
     config.data ||= <Data>{};
 
-    config.package.name ||= packageLock.name;
+    config.package.name ||= packageLock.name || config.repository?.repo;
     config.data.title ||= titleCase(config.repository?.repo);
     config.data.description ||=
         packageLock.description || config.repository?.owner;
