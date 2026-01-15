@@ -174,7 +174,7 @@ Ultimately, the image link will look like this:
 
 ## FAQ
 
-> 💥 Preview Updater failed with error: Error when creating pull request from preview/banner-***: GitHub Actions is not permitted to create or approve pull requests
+> 💥 Preview Updater failed with error: Error when creating a pull request from preview/banner-***: GitHub Actions is not permitted to create or approve pull requests
 
 Enable the "Allow GitHub Actions to create and approve pull requests" option in project settings.
 
