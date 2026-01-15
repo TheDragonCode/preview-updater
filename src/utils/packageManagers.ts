@@ -22,5 +22,9 @@ export const getPackageManager = (config: Config): LockFile => {
         return getComposer(config);
     }
 
-    return getNpm(config);
+    if (hasNpm(config) || hasYarn(config)) {
+        return getNpm(config);
+    }
+
+    return <LockFile>{};
 };
