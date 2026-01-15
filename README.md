@@ -38,6 +38,7 @@ jobs:
 
             -   name: Update banner
                 uses: TheDragonCode/github-preview-updater@v2
+                id: preview
                 with:
                     # Personal access token (PAT) used when interacting with Git and GitHub.
                     #
@@ -62,6 +63,12 @@ jobs:
                     #
                     # Required: false
                     readme: ''
+
+            -   name: Merge PR
+                if: steps.preview.outputs.pullRequestNumber != ''
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: gh pr merge --merge --delete-branch ${{ steps.preview.outputs.pullRequestNumber }}
 ```
 
 The action is setting the following outputs:
@@ -201,10 +208,17 @@ jobs:
 
             -   name: Update banner
                 uses: TheDragonCode/github-preview-updater@v2
+                id: preview1
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
                     readme: 'README_foo.md'
                     config: '.github/preview-updater-foo.yml'
+
+            -   name: Merge PR
+                if: steps.preview1.outputs.pullRequestNumber != ''
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: gh pr merge --merge --delete-branch ${{ steps.preview.outputs.pullRequestNumber }}
 
     bar:
         runs-on: ubuntu-latest
@@ -216,10 +230,17 @@ jobs:
 
             -   name: Update banner
                 uses: TheDragonCode/github-preview-updater@v2
+                id: preview2
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
                     readme: 'README.bar.md'
                     config: '.github/preview-updater-bar.yml'
+
+            -   name: Merge PR
+                if: steps.preview2.outputs.pullRequestNumber != ''
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: gh pr merge --merge --delete-branch ${{ steps.preview.outputs.pullRequestNumber }}
 ```
 
 ## FAQ
