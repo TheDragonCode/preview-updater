@@ -1,17 +1,17 @@
 import { getImages } from "./image";
 import type { Config } from "../types/config";
 import { removeImages, titleCase } from "./strings";
-import type { Package } from "../types/package";
+import type { LockFile } from "../types/lockFile";
 
 const hasHeader = (content: string) => content.match(/^#\s+/);
 
 export const setPreview = (
     content: string,
     config: Config,
-    packageData: Package,
+    packageData: LockFile,
 ): string => {
     if (!hasHeader(content)) {
-        const title = titleCase(config.image.parameters.title);
+        const title = titleCase(config.data?.title);
 
         content = `# ${title}\n\n${content}`;
     }

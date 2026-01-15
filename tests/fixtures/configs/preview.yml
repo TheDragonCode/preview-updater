@@ -1,20 +1,4 @@
-path:
-    readme: 'README-foo.md'
-
-image:
-    url: 'https://example.com/image.png'
-    parameters:
-        pattern: 'cage'
-        style: 'style_1'
-        fontSize: '123px'
-        icon: 'cog'
-        
-        packageManager: 'yarn'
-        packageGlobal: true
-        packageName: 'foo/bar'
-        
-        title: 'Foo Bar'
-        description: 'Lorem ipsum dolor sit amet.'
+readme: 'README-foo.md'
 
 repository:
     commit:
@@ -35,3 +19,24 @@ repository:
         labels:
             - foo3
             - foo4
+
+data:
+    title: 'Foo Bar'
+    description: 'Lorem ipsum dolor sit amet.'
+
+package:
+    manager: yarn
+    global: true
+    name: 'foo/bar'
+
+image:
+    url: 'https://example.com/image.png'
+    parameters:
+        pattern: 'cage'
+        style: 'style_1'
+        fontSize: '123px'
+        icon: 'cog'
+        qwe: 'rty'
+        foo: 'Foo'
+        bar: 'Bar'
+        baz: 'Baz'

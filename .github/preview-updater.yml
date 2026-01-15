@@ -1,7 +1,9 @@
 # $schema: ../resources/schema.json
 
+package:
+    manager: 'uses:'
+    name: 'TheDragonCode/github-preview-updater@v2'
+
 image:
     parameters:
         icon: 'photograph'
-        packageManager: 'uses:'
-        packageName: 'TheDragonCode/github-preview-updater@v1'

@@ -1,5 +1,4 @@
-image:
-    parameters:
-        packageManager: foo
-        packageGlobal: true
-        packageDev: true
+package:
+    manager: foo
+    global: true
+    dev: true

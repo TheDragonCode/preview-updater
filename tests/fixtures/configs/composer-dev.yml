@@ -1,4 +1,3 @@
-image:
-    parameters:
-        packageManager: composer
-        packageDev: true
+package:
+    manager: composer
+    dev: true

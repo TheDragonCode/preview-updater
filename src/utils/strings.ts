@@ -8,7 +8,7 @@ const normalizeWords = (value: string): string => {
     return value;
 };
 
-export const titleCase = (title: string | undefined) => {
+export const titleCase = (title?: string) => {
     if (title === "" || title === undefined) {
         return "";
     }

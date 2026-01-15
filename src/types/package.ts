@@ -1,7 +1,6 @@
 export interface Package {
-    name: string;
-    description: string;
-
-    dependencies?: Record<string, string>[];
-    require?: Record<string, string>[];
+    manager?: "composer" | "npm" | "yarn" | "auto" | "none" | string;
+    global?: boolean;
+    dev?: boolean;
+    name?: string;
 }

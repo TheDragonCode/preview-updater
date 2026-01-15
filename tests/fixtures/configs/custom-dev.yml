@@ -1,4 +1,3 @@
-image:
-    parameters:
-        packageManager: foo
-        packageDev: true
+package:
+    manager: foo
+    dev: true

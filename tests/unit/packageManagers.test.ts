@@ -2,13 +2,13 @@ import { hasComposer, hasNpm, hasYarn } from "../../src/utils/packageManagers";
 import { testConfig } from "../helpers/config";
 
 test("composer", () => {
-    expect(hasComposer(testConfig)).toBe(false);
+    expect(hasComposer(testConfig)).toBeFalsy();
 });
 
 test("npm", () => {
-    expect(hasNpm(testConfig)).toBe(true);
+    expect(hasNpm(testConfig)).toBeTruthy();
 });
 
 test("yarn", () => {
-    expect(hasYarn(testConfig)).toBe(false);
+    expect(hasYarn(testConfig)).toBeFalsy();
 });

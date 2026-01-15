@@ -68,9 +68,9 @@ The action is setting the following outputs:
 ## Configuration
 
 > [!TIP]
-> 
+>
 > Support for working with a global settings file at the organization level (the `.github` repository).
-> 
+>
 > For example,
 >
 > - template is `https://github.com/<repo>/.github/blob/main/<configPath>`.
@@ -82,47 +82,7 @@ All fields are optional—omitted ones fall back to defaults.
 ```yaml
 # $schema: https://raw.githubusercontent.com/TheDragonCode/github-preview-updater/refs/heads/main/resources/schema.json
 
-path:
-    readme: README.md        # Target file to update
-
-image:
-    url: https://banners.beyondco.de/{title}.png
-    parameters:
-        pattern: topography
-        style: style_2
-        fontSize: 100px
-        icon: code
-
-        # Declares the use of the package manager.
-        # It is a regular string that will be substituted into the URL address.
-        #
-        # Reserved words: composer | npm | yarn | auto | none
-        #
-        # Any package manager name can be specified.
-        #
-        # By default, auto
-        packageManager: auto
-
-        # By default, the package name is taken from the composer.json or package.json file.
-        packageName: ''
-
-        # Add a prefix for global installation (`composer global require`, `npm install -g`)
-        # The parameter will be ignored when a non-standard package manager name is specified in
-        # the `packageManager` parameter.
-        packageGlobal: false
-
-        # Add a prefix for dev installation (`composer require --dev`, `npm install --save-dev`)
-        # The parameter will be ignored when a non-standard package manager name is specified in
-        # the `packageManager` parameter
-        packageDev: false
-
-        # By default, the repository name will be used.
-        # For example, for https://github.com/TheDragonCode/github-preview-updater, it will take `preview-updater`
-        # and convert it to `Preview Updater`.
-        title: ''          # Fallbacks to repo name (Title Case)
-
-        # By default, the package description will be used (the ` description ` key in composer.json or package.json).
-        description: ''    # Fallbacks to owner name or package description
+path: README.md        # Target file to update
 
 repository:
     commit:
@@ -138,11 +98,75 @@ repository:
         body: ''
         assignees: [ ]
         labels: [ 'preview' ]
+
+data:
+    # By default, the repository name will be used.
+    # For example, for https://github.com/TheDragonCode/github-preview-updater, it will take `preview-updater`
+    # and convert it to `Preview Updater`.
+    title: ''          # Fallbacks to repo name (Title Case)
+
+    # By default, the package description will be used (the ` description ` key in composer.json or package.json).
+    description: ''    # Fallbacks to owner name or package description
+
+package:
+    # Declares the use of the package manager.
+    # It is a regular string that will be substituted into the URL address.
+    #
+    # Reserved words: composer | npm | yarn | auto | none
+    #
+    # Any package manager name can be specified.
+    #
+    # By default, auto
+    manager: auto
+
+    # Add a prefix for global installation (`composer global require`, `npm install -g`)
+    # The parameter will be ignored when a non-standard package manager name is specified in
+    # the `packageManager` parameter.
+    global: false
+
+    # Add a prefix for dev installation (`composer require --dev`, `npm install --save-dev`)
+    # The parameter will be ignored when a non-standard package manager name is specified in
+    # the `packageManager` parameter
+    dev: false
+
+    # By default, the package name is taken from the composer.json or package.json file.
+    name: ''
+
+image:
+    url: https://banners.beyondco.de/{title}.png
+
+    # May contain any keys and values
+    parameters:
+        pattern: topography
+        style: style_2
+        fontSize: 100px
+        icon: code
+
 ```
 
 Currently, the project generates previews through [banners.beyondco.de](https://banners.beyondco.de) and the parameters
 are specified for it.
 But you can use any other service by replacing the URL.
+
+### Information on how link formation works
+
+An object is created, containing combined data from the [`data`](src/types/data.ts) and [
+`image.parameters`](src/types/image.ts) objects.
+
+A link is taken from the `image.url` parameter and using the `replace` method, everything is replaced in it according to
+the `{key}` pattern, where `key` is the object key from the merged object.
+
+For example, if the `image.url` parameter is `https://banners.beyondco.de/{title}/{foo}-{bar}.png`, and the `data`
+object is `{ title: 'Qwe rty', foo: 'asd', bar: 'zxc' }`, then the resulting link will be
+`https://banners.beyondco.de/Qwe%20rty/asd-zxc.png`.
+
+After this, the original `image.parameters` object is taken and query parameters are formed from it.
+
+For example, if the `image.parameters` object is `{ foo: 'asd', bar: 'zxc' }`, then the resulting query parameters
+will be `?foo=asd&bar=zxc`.
+
+Ultimately, the image link will look like this:
+`https://banners.beyondco.de/Qwe%20rty/asd-zxc.png?foo=asd&bar=zxc`.
 
 ## License
 

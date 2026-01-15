@@ -1,8 +1,9 @@
-import type { Config, ImageParameters } from "../types/config";
+import type { Config } from "../types/config";
 import { hasComposer, hasNpm, hasYarn } from "./packageManagers";
-import { encodeUri } from "./strings";
-import type { Package } from "../types/package";
+import type { LockFile } from "../types/lockFile";
 import { detectIcon } from "./icons";
+import type { Package } from "../types/package";
+import { encodeUri } from "./strings";
 
 const command = (manager: string, dev: boolean, global: boolean): string => {
     switch (manager) {
@@ -34,9 +35,9 @@ const detectPackageManager = (config: Config): string => {
 };
 
 const packageManager = (config: Config): string => {
-    const global: boolean = config.image.parameters.packageGlobal;
-    const dev: boolean = config.image.parameters.packageDev;
-    let name: string = config.image.parameters.packageManager;
+    const global: boolean = config.package?.global || false;
+    const dev: boolean = config.package?.dev || false;
+    let name: string = config.package?.manager || "auto";
 
     if (name === "none") {
         return "";
@@ -50,49 +51,47 @@ const packageManager = (config: Config): string => {
         return command(name, dev, global);
     }
 
-    return config.image.parameters.packageManager.trim();
+    return name.trim();
 };
 
-const packageName = (image: ImageParameters): string => {
-    if (image.packageManager === "none") {
+const packageName = (data?: Package): string => {
+    if (data?.manager === "none") {
         return "";
     }
 
-    return image?.packageName || "";
+    return data?.name || "";
 };
 
 const render = (
     config: Config,
-    packageData: Package,
+    packageData: LockFile,
     theme: "light" | "dark",
 ): string => {
-    const image = config.image.parameters;
+    let url: string = config.image?.url || "";
+    const parameters: Record<string, string> = config.image?.parameters || {};
 
-    const params = new URLSearchParams({
-        theme: theme,
-        pattern: image.pattern,
-        style: image.style,
-        fontSize: image.fontSize,
-        images: image.icon || detectIcon(packageData),
-        packageManager: packageManager(config),
-        packageName: packageName(image),
-        description: image.description || "",
-        md: "1",
-        showWatermark: "1",
-    });
+    parameters.theme = theme;
 
-    return (
-        config.image.url.replace("{title}", encodeUri(image.title)) +
-        "?" +
-        params.toString()
-    );
+    parameters.packageManager = packageManager(config);
+    parameters.packageName = packageName(config.package);
+
+    parameters.title = config.data?.title || "";
+    parameters.description = config.data?.description || "";
+
+    parameters.images = detectIcon(config.image, packageData);
+
+    for (const [key, value] of Object.entries(parameters)) {
+        url = url.replace(`{${key}}`, encodeUri(value));
+    }
+
+    return `${url}?${(new URLSearchParams(parameters)).toString()}`;
 };
 
-export const getImages = (config: Config, packageData: Package): string => {
-    const title = config.image.parameters.title;
+export const getImages = (config: Config, packageData: LockFile): string => {
+    const title: string | undefined = config.data?.title;
 
-    const light = render(config, packageData, "light");
-    const dark = render(config, packageData, "dark");
+    const light: string = render(config, packageData, "light");
+    const dark: string = render(config, packageData, "dark");
 
     return `<picture>
     <source media="(prefers-color-scheme: dark)" srcset="${dark}">

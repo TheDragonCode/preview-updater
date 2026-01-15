@@ -4,98 +4,42 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {
-        "path": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "readme": {
-                    "type": "string",
-                    "description": "Target README file where the banner will be inserted",
-                    "default": "README.md"
-                }
-            }
-        },
-        "image": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "url": {
-                    "type": "string",
-                    "description": "Banner generation service URL",
-                    "default": "https://banners.beyondco.de/{title}.png"
-                },
-                "parameters": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                        "pattern": {
-                            "type": "string",
-                            "default": "topography"
-                        },
-                        "style": {
-                            "type": "string",
-                            "default": "style_2"
-                        },
-                        "fontSize": {
-                            "type": "string",
-                            "default": "100px"
-                        },
-                        "icon": {
-                            "type": "string",
-                            "default": "code"
-                        },
-                        "packageManager": {
-                            "description": "Package manager name. Reserved values: composer | npm | yarn | auto | none",
-                            "anyOf": [
-                                {
-                                    "type": "string",
-                                    "enum": [
-                                        "composer",
-                                        "npm",
-                                        "yarn",
-                                        "auto",
-                                        "none"
-                                    ]
-                                },
-                                {
-                                    "type": "string"
-                                }
-                            ],
-                            "default": "auto"
-                        },
-                        "packageName": {
-                            "type": "string",
-                            "description": "Package name. By default taken from composer.json or package.json"
-                        },
-                        "packageGlobal": {
-                            "type": "boolean",
-                            "description": "Add prefix for global installation",
-                            "default": false
-                        },
-                        "packageDev": {
-                            "type": "boolean",
-                            "description": "Add a prefix for dev installation",
-                            "default": false
-                        },
-                        "title": {
-                            "type": "string",
-                            "description": "Banner title. The repository name is used by default"
-                        },
-                        "description": {
-                            "type": "string",
-                            "description": "Package description. The repository description is used by default"
-                        }
-                    }
-                }
-            }
+        "readme": {
+            "type": "string",
+            "description": "Target README file where the banner will be inserted",
+            "default": "README.md"
         },
         "repository": {
             "type": "object",
             "additionalProperties": false,
+            "default": {
+                "commit": {
+                    "branch": "preview/banner-{random}",
+                    "title": "docs(preview): Update preview",
+                    "author": {
+                        "name": "github-actions",
+                        "email": "github-actions@github.com"
+                    }
+                },
+                "pullRequest": {
+                    "title": "Update preview",
+                    "labels": [
+                        "preview"
+                    ]
+                }
+            },
             "properties": {
                 "commit": {
                     "type": "object",
                     "additionalProperties": false,
+                    "default": {
+                        "branch": "preview/banner-{random}",
+                        "title": "docs(preview): Update preview",
+                        "author": {
+                            "name": "github-actions",
+                            "email": "github-actions@github.com"
+                        }
+                    },
                     "properties": {
                         "branch": {
                             "type": "string",
@@ -160,6 +104,99 @@
                                 "preview"
                             ]
                         }
+                    }
+                }
+            }
+        },
+        "data": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "description": "Banner title. Defaults to repository name"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Banner description. Defaults to repository description or owner"
+                }
+            }
+        },
+        "package": {
+            "type": "object",
+            "additionalProperties": false,
+            "default": {
+                "manager": "auto",
+                "global": false,
+                "dev": false
+            },
+            "properties": {
+                "manager": {
+                    "description": "Package manager name. Reserved values: composer | npm | yarn | auto | none",
+                    "anyOf": [
+                        {
+                            "type": "string",
+                            "enum": [
+                                "composer",
+                                "npm",
+                                "yarn",
+                                "auto",
+                                "none"
+                            ]
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ],
+                    "default": "auto"
+                },
+                "global": {
+                    "type": "boolean",
+                    "description": "Add prefix for global installation",
+                    "default": false
+                },
+                "dev": {
+                    "type": "boolean",
+                    "description": "Add a prefix for dev installation",
+                    "default": false
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Package name. By default taken from composer.json or package.json"
+                }
+            }
+        },
+        "image": {
+            "type": "object",
+            "additionalProperties": false,
+            "default": {
+                "url": "https://banners.beyondco.de/{title}.png",
+                "parameters": {
+                    "pattern": "topography",
+                    "style": "style_2",
+                    "fontSize": "100px",
+                    "md": "1",
+                    "showWatermark": "1"
+                }
+            },
+            "properties": {
+                "url": {
+                    "type": "string",
+                    "description": "Banner generation service URL",
+                    "default": "https://banners.beyondco.de/{title}.png"
+                },
+                "parameters": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "Query parameters passed to the image service",
+                    "default": {
+                        "pattern": "topography",
+                        "style": "style_2",
+                        "fontSize": "100px",
+                        "md": "1",
+                        "showWatermark": "1"
                     }
                 }
             }

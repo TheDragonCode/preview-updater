@@ -1,9 +1,10 @@
-import { type Config, defaultConfig } from "../types/config";
+import type { Config } from "../types/config";
 import * as yaml from "js-yaml";
 import { readFile, readRemoteFile } from "./filesystem";
 import { merge } from "./merge";
 import { info } from "@actions/core";
 import * as url from "node:url";
+import { defaultConfig } from "../libs/defaults";
 
 export const readConfig = async (
     config: Config,
@@ -33,9 +34,9 @@ export const readRemoteConfig = async (
             return <Config>{};
         }
 
-        const url = `https://raw.githubusercontent.com/${owner}/.github/refs/heads/main/${filename}`;
-
-        const data: string = await readRemoteFile(url);
+        const data: string = await readRemoteFile(
+            `https://raw.githubusercontent.com/${owner}/.github/refs/heads/main/${filename}`,
+        );
 
         if (data === "") {
             return <Config>{};

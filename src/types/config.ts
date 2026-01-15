@@ -1,107 +1,15 @@
-export interface ImageParameters {
-    pattern: string;
-    style: string;
-    fontSize: string;
-    icon?: string;
-
-    packageManager: "composer" | "npm" | "yarn" | "auto" | "none" | string;
-    packageName?: string;
-    packageGlobal: boolean;
-    packageDev: boolean;
-
-    title?: string;
-    description?: string;
-}
-
-export interface Image {
-    url: string;
-    parameters: ImageParameters;
-}
-
-export interface Author {
-    name: string;
-    email: string;
-}
-
-export interface Commit {
-    branch: string;
-    title: string;
-    body?: string;
-    author: Author;
-}
-
-export interface PullRequest {
-    title: string;
-    body?: string;
-    assignees: string[];
-    labels: string[];
-}
-
-export interface Repository {
-    owner?: string;
-    repo?: string;
-
-    commit: Commit;
-    pullRequest: PullRequest;
-}
-
-export interface Path {
-    readme: string;
-}
+import type { Repository } from "./repository";
+import type { Data } from "./data";
+import type { Package } from "./package";
+import type { Image } from "./image";
 
 export interface Config {
     directory?: string;
-    path: Path;
+    readme?: string;
 
-    image: Image;
-    repository: Repository;
+    repository?: Repository;
+
+    data?: Data;
+    package?: Package;
+    image?: Image;
 }
-
-export const defaultConfig: Config = {
-    directory: undefined,
-    path: {
-        readme: "README.md",
-    },
-
-    image: {
-        url: "https://banners.beyondco.de/{title}.png",
-
-        parameters: {
-            pattern: "topography",
-            style: "style_2",
-            fontSize: "100px",
-            icon: undefined,
-
-            packageManager: "auto",
-            packageGlobal: false,
-            packageDev: false,
-            packageName: undefined,
-
-            title: undefined,
-            description: undefined,
-        },
-    },
-
-    repository: {
-        owner: undefined,
-        repo: undefined,
-
-        commit: {
-            branch: "preview/banner-{random}",
-            title: "docs(preview): Update preview",
-            body: undefined,
-
-            author: {
-                name: "github-actions",
-                email: "github-actions@github.com",
-            },
-        },
-
-        pullRequest: {
-            title: "Update preview",
-            body: undefined,
-            assignees: [],
-            labels: ["preview"],
-        },
-    },
-};

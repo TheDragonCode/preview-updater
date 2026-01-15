@@ -1,5 +1,4 @@
-image:
-    parameters:
-        packageManager: composer
-        packageGlobal: true
-        packageDev: true
+package:
+    manager: composer
+    global: true
+    dev: true
