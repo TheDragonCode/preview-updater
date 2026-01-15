@@ -135,13 +135,6 @@ export class Repository {
         try {
             const defaultBranch: string = await this.defaultBranchName();
 
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            console.log(defaultBranch);
-            console.log("bbbbbbbbbbbbbb");
-
             return await this._octokit.rest.pulls.create(<
                 RestEndpointMethodTypes["pulls"]["create"]["parameters"]
             >{
