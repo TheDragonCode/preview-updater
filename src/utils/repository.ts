@@ -24,7 +24,7 @@ export class Repository {
         const authorName =
             this._config.repository?.commit?.author?.name || defaultAuthor.name;
         const authorEmail =
-            this._config.repository?.commit?.author?.name ||
+            this._config.repository?.commit?.author?.email ||
             defaultAuthor.email;
 
         try {
@@ -32,7 +32,7 @@ export class Repository {
             await exec(`git config user.email "${authorEmail}"`);
         } catch (error) {
             // @ts-expect-error
-            error.message = `Error authenticating user "${authorName}" with e-mail "${author.email}": ${error.message}`;
+            error.message = `Error authenticating user "${authorName}" with e-mail "${authorEmail}": ${error.message}`;
 
             throw error;
         }
