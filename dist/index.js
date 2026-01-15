@@ -34797,13 +34797,15 @@ const render = (config, packageData, theme) => {
     parameters.theme = theme;
     parameters.packageManager = packageManager(config);
     parameters.packageName = packageName(config.package);
-    parameters.title = config.data?.title || "";
-    parameters.description = config.data?.description || "";
     parameters.images = (0, icons_1.detectIcon)(config.image, packageData);
+    url = url
+        .replace("{title}", (0, strings_1.encodeUri)(config.data?.title || ""))
+        .replace("{description}", (0, strings_1.encodeUri)(config.data?.description || ""));
     for (const [key, value] of Object.entries(parameters)) {
         url = url.replace(`{${key}}`, (0, strings_1.encodeUri)(value));
     }
-    return `${url}?${(new URLSearchParams(parameters)).toString()}`;
+    const query = new URLSearchParams(parameters).toString();
+    return `${url}?${query}`;
 };
 const getImages = (config, packageData) => {
     const title = config.data?.title;
