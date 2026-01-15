@@ -5,9 +5,9 @@ import type { Package } from "./package";
 
 export interface Config {
     directory?: string;
-    readme: string;
+    readme?: string;
 
-    repository: Repository;
+    repository?: Repository;
 
     data?: Data;
     package?: Package;

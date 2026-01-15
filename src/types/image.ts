@@ -1,4 +1,4 @@
 export interface Image {
-    url: string;
-    parameters: Record<string, string>;
+    url?: string;
+    parameters?: Record<string, string>;
 }
