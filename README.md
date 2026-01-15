@@ -54,7 +54,7 @@ jobs:
                     # By default, .github/preview-updater.yml
                     #
                     # Required: false
-                    configPath: ''
+                    config: ''
 ```
 
 The action is setting the following outputs:
@@ -73,10 +73,10 @@ The action is setting the following outputs:
 >
 > For example,
 >
-> - template is `https://github.com/<repo>/.github/blob/main/<configPath>`.
+> - template is `https://github.com/<repo>/.github/blob/main/<config>`.
 > - result is `https://github.com/TheDragonCode/.github/blob/main/.github/preview-updater.yml`.
 
-Create `.github/preview-updater.yml` (or provide your own path via `configPath`).
+Create `.github/preview-updater.yml` (or provide your own path via `config`).
 All fields are optional—omitted ones fall back to defaults.
 
 ```yaml

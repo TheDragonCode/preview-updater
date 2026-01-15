@@ -15,7 +15,7 @@ inputs:
             GitHub token with `contents:write` permission used to read and update repository files.
         required: true
 
-    configPath:
+    config:
         description: Path to the preview configuration YAML file.
         default: '.github/preview-updater.yml'
         required: false
