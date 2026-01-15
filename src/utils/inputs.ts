@@ -6,7 +6,7 @@ export const TOKEN = {
 };
 
 export const CONFIG_PATH = {
-    name: "configPath",
+    name: "config",
     env: "INPUT_CONFIG_PATH",
     defaultValue: ".github/preview-updater.yml",
 };
