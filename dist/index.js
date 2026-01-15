@@ -34975,7 +34975,7 @@ class Repository {
     }
     async authenticate() {
         const authorName = this._config.repository?.commit?.author?.name || defaults_1.defaultAuthor.name;
-        const authorEmail = this._config.repository?.commit?.author?.name ||
+        const authorEmail = this._config.repository?.commit?.author?.email ||
             defaults_1.defaultAuthor.email;
         try {
             await (0, processes_1.exec)(`git config user.name "${authorName}"`);
@@ -34983,7 +34983,7 @@ class Repository {
         }
         catch (error) {
             // @ts-expect-error
-            error.message = `Error authenticating user "${authorName}" with e-mail "${author.email}": ${error.message}`;
+            error.message = `Error authenticating user "${authorName}" with e-mail "${authorEmail}": ${error.message}`;
             throw error;
         }
     }
