@@ -5,15 +5,9 @@
     "additionalProperties": false,
     "properties": {
         "path": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "readme": {
-                    "type": "string",
-                    "description": "Target README file where the banner will be inserted",
-                    "default": "README.md"
-                }
-            }
+            "type": "string",
+            "description": "Target README file where the banner will be inserted",
+            "default": "README.md"
         },
         "image": {
             "type": "object",

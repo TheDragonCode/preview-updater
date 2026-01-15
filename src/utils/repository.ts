@@ -73,10 +73,10 @@ export class Repository {
 
     async stage() {
         try {
-            await exec(`git add ${this._config.path.readme}`);
+            await exec(`git add ${this._config.readme}`);
         } catch (error) {
             // @ts-expect-error
-            error.message = `Error staging file "${this._config.path.readme}": ${error.message}`;
+            error.message = `Error staging file "${this._config.readme}": ${error.message}`;
 
             throw error;
         }
@@ -94,7 +94,7 @@ export class Repository {
             await exec(`git commit -m "${message}"`);
         } catch (error) {
             // @ts-expect-error
-            error.message = `Error committing file "${this._config.path.readme}": ${error.message}`;
+            error.message = `Error committing file "${this._config.readme}": ${error.message}`;
 
             throw error;
         }
@@ -143,6 +143,10 @@ export class Repository {
 
     async assignee(issueNumber: number, assignees: string[]) {
         try {
+            if (assignees.length === 0) {
+                return;
+            }
+
             return this._octokit.rest.issues.addAssignees(<
                 RestEndpointMethodTypes["issues"]["addAssignees"]["parameters"]
             >{
@@ -161,6 +165,10 @@ export class Repository {
 
     async addLabels(issueNumber: number, labels: string[]) {
         try {
+            if (labels.length === 0) {
+                return;
+            }
+
             return this._octokit.rest.issues.addLabels(<
                 RestEndpointMethodTypes["issues"]["addLabels"]["parameters"]
             >{

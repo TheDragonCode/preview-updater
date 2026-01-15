@@ -1,7 +1,7 @@
 import { readFile } from "../../src/utils/filesystem";
 import { setPreview } from "../../src/utils/preview";
 import { testConfig } from "./config";
-import type { Package } from "../../src/types/package";
+import type { LockFile } from "../../src/types/lockFile";
 import { getNpm } from "../../src/utils/packageManagers";
 import type { Config } from "../../src/types/config";
 import { merge } from "../../src/utils/merge";
@@ -16,6 +16,6 @@ export const getReadme = (filename: string, config?: Config): string => {
     return setPreview(content, config, getNpm(config));
 };
 
-export const getPackage = (filename: string): Package => {
-    return <Package>JSON.parse(readFile(testConfig, filename));
+export const getPackage = (filename: string): LockFile => {
+    return <LockFile>JSON.parse(readFile(testConfig, filename));
 };

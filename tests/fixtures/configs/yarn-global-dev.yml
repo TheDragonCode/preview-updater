@@ -1,5 +1,4 @@
-image:
-    parameters:
-        packageManager: yarn
-        packageGlobal: true
-        packageDev: true
+package:
+    manager: yarn
+    global: true
+    dev: true

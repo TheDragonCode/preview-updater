@@ -33,9 +33,9 @@ export const readRemoteConfig = async (
             return <Config>{};
         }
 
-        const url = `https://raw.githubusercontent.com/${owner}/.github/refs/heads/main/${filename}`;
-
-        const data: string = await readRemoteFile(url);
+        const data: string = await readRemoteFile(
+            `https://raw.githubusercontent.com/${owner}/.github/refs/heads/main/${filename}`,
+        );
 
         if (data === "") {
             return <Config>{};

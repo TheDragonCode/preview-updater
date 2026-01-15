@@ -1,5 +1,4 @@
-image:
-    parameters:
-        packageManager: npm
-        packageGlobal: true
-        packageDev: true
+package:
+    manager: npm
+    global: true
+    dev: true

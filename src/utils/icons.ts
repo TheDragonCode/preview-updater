@@ -1,5 +1,6 @@
 import type { Icon } from "../types/icons";
-import type { Package } from "../types/package";
+import type { LockFile } from "../types/lockFile";
+import type { Image } from "../types/image";
 
 export const phpIcons: Icon[] = [
     { query: "laravel/", icon: "https://laravel.com/img/logomark.min.svg" },
@@ -33,7 +34,14 @@ const find = (
     return undefined;
 };
 
-export const detectIcon = (packageData: Package): string => {
+export const detectIcon = (
+    image: Image | undefined,
+    packageData: LockFile,
+): string => {
+    if (image?.parameters?.icon) {
+        return image.parameters.icon;
+    }
+
     if (packageData?.require !== undefined) {
         const phpIcon: string | undefined = find(packageData.require, phpIcons);
 

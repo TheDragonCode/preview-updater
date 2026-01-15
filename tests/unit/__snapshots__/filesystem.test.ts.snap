@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`custom config 1`] = `"README-foo.md"`;
+
+exports[`custom config 2`] = `
+{
+  "commit": {
+    "author": {
+      "email": "some_username@example.com",
+      "name": "some_username",
+    },
+    "body": "Eu assum suscipit, vel veniam eu sadipscing kasd invidunt elit wisi.",
+    "branch": "qwerty",
+    "title": "Foo Bar Commit",
+  },
+  "pullRequest": {
+    "assignees": [
+      "foo1",
+      "foo2",
+    ],
+    "body": "Eu assum suscipit, vel veniam eu sadipscing kasd invidunt elit wisi.",
+    "labels": [
+      "foo3",
+      "foo4",
+    ],
+    "title": "Foo Bar Baz Pull Request",
+  },
+}
+`;
+
+exports[`custom config 3`] = `
+{
+  "description": "Lorem ipsum dolor sit amet.",
+  "title": "Foo Bar",
+}
+`;
+
+exports[`custom config 4`] = `
+{
+  "dev": false,
+  "global": true,
+  "manager": "yarn",
+  "name": "foo/bar",
+}
+`;
+
+exports[`custom config 5`] = `
+{
+  "parameters": {
+    "bar": "Bar",
+    "baz": "Baz",
+    "fontSize": "123px",
+    "foo": "Foo",
+    "icon": "cog",
+    "md": "1",
+    "pattern": "cage",
+    "qwe": "rty",
+    "showWatermark": "1",
+    "style": "style_1",
+  },
+  "url": "https://example.com/image.png",
+}
+`;
+
+exports[`read config 1`] = `"README.md"`;
+
+exports[`read config 2`] = `
+{
+  "commit": {
+    "author": {
+      "email": "github-actions@github.com",
+      "name": "github-actions",
+    },
+    "branch": "preview/banner-{random}",
+    "title": "docs(preview): Update preview",
+  },
+  "pullRequest": {
+    "assignees": [],
+    "labels": [
+      "preview",
+    ],
+    "title": "Update preview",
+  },
+}
+`;
+
+exports[`read config 3`] = `
+{
+  "description": "Some description",
+  "title": "Some title",
+}
+`;
+
+exports[`read config 4`] = `
+{
+  "dev": false,
+  "global": false,
+  "manager": "uses:",
+  "name": "foo/bar-baz",
+}
+`;
+
+exports[`read config 5`] = `
+{
+  "parameters": {
+    "fontSize": "100px",
+    "icon": "photograph",
+    "md": "1",
+    "pattern": "topography",
+    "showWatermark": "1",
+    "style": "style_2",
+  },
+  "url": "https://banners.beyondco.de/{title}.png",
+}
+`;

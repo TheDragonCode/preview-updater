@@ -9,7 +9,9 @@ import { setOutputs } from "./utils/outputs";
 import { getPackageManager } from "./utils/packageManagers";
 import { titleCase } from "./utils/strings";
 import { readConfig } from "./utils/config";
+import type { LockFile } from "./types/lockFile";
 import type { Package } from "./types/package";
+import type { Data } from "./types/data";
 
 const previewUpdater = async () => {
     // Inputs
@@ -29,12 +31,15 @@ const previewUpdater = async () => {
     );
 
     // Read names
-    const packageData: Package = getPackageManager(config);
+    const packageLock: LockFile = getPackageManager(config);
 
-    config.image.parameters.packageName ||= packageData.name;
-    config.image.parameters.title ||= titleCase(config.repository.repo);
-    config.image.parameters.description ||=
-        packageData.description || config.repository.owner;
+    config.package ||= <Package>{};
+    config.data ||= <Data>{};
+
+    config.package.name ||= packageLock.name;
+    config.data.title ||= titleCase(config.repository.repo);
+    config.data.description ||=
+        packageLock.description || config.repository.owner;
 
     // Show working directory
     info(`Working directory: ${config.directory}`);
@@ -44,11 +49,11 @@ const previewUpdater = async () => {
     await repo.authenticate();
 
     // Read file
-    const content = readFile(config, config.path.readme);
-    const preview = setPreview(content, config, packageData);
+    const content = readFile(config, config.readme);
+    const preview = setPreview(content, config, packageLock);
 
     if (content === preview) {
-        info(`File "${config.path.readme}" is up to date`);
+        info(`File "${config.readme}" is up to date`);
 
         return;
     }
@@ -61,8 +66,8 @@ const previewUpdater = async () => {
     await repo.checkoutBranch(!branchExists);
 
     // Write a file
-    info(`Update readme in "${config.path.readme}" file`);
-    writeFile(config, config.path.readme, preview);
+    info(`Update readme in "${config.readme}" file`);
+    writeFile(config, config.readme, preview);
 
     // Stage and commit changes
     await repo.stage();
@@ -76,19 +81,15 @@ const previewUpdater = async () => {
     const pullRequestNumber: number = pullRequest.data.number;
     const pullRequestUrl: string = pullRequest.data.html_url;
 
-    if (config.repository.pullRequest.assignees.length > 0) {
-        await repo.assignee(
-            pullRequestNumber,
-            config.repository.pullRequest.assignees,
-        );
-    }
-
-    if (config.repository.pullRequest.labels.length > 0) {
-        await repo.addLabels(
-            pullRequestNumber,
-            config.repository.pullRequest.labels,
-        );
-    }
+    // Set labels and assignees
+    await repo.assignee(
+        pullRequestNumber,
+        config.repository.pullRequest.assignees,
+    );
+    await repo.addLabels(
+        pullRequestNumber,
+        config.repository.pullRequest.labels,
+    );
 
     info(
         `Preview created in Pull Request #${pullRequestNumber}: ${pullRequestUrl}`,

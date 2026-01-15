@@ -1,4 +1,3 @@
-image:
-    parameters:
-        packageManager: yarn
-        packageDev: true
+package:
+    manager: yarn
+    dev: true
